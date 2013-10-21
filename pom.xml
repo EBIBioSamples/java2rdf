@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>uk.ac.ebi.fg</groupId>
+  <artifactId>java2rdf</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>A library to map JavaBeans onto RDF/OWL classes</name>
+  <url>http://github.com/marco-brandizi/java2rdf</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <owlapi.version>3.4.3</owlapi.version>
+  </properties>
+
+  <dependencies>
+  
+		<!-- Common facade for logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+
+		<!-- Use Logback as concrete logger -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.29</version>
+		</dependency>
+
+		<!-- Intercepts log4j and sends it to SL4J -->		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+  		
+		<dependency>
+		  <groupId>uk.ac.ebi</groupId>
+		  <artifactId>jutils</artifactId>
+		  <version>3.0.1-SNAPSHOT</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-api</artifactId>		
+			<version>${owlapi.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-apibinding</artifactId>		
+			<version>${owlapi.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>hermit</groupId>
+			<artifactId>hermit</artifactId>
+			<version>1.3.4</version>
+			<type>jar</type>
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.semanticweb.owlapi</groupId> -->
+<!-- 			<artifactId>owlapi</artifactId> -->
+<!-- 			<version>3.2.4</version> -->
+<!-- 		</dependency> -->
+  
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+		</dependency>  
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>		
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		
+		<!-- TEST -->
+  
+	  <dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.10</version>
+	    <scope>test</scope>
+	  </dependency>
+
+
+  </dependencies>
+
+	<build>
+	
+		<finalName>${project.artifactId}_cmdline_${project.version}</finalName>
+	
+		<plugins>
+		
+      <plugin>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	      <configuration>
+	        <source>1.7</source>
+	        <target>1.7</target>
+	        <encoding>UTF-8</encoding>
+	      </configuration>
+	    </plugin>
+	
+	    <plugin>
+		    <artifactId>maven-source-plugin</artifactId>
+		    <executions>
+		      <execution>
+		        <id>attach-source</id>
+		        <goals>
+		          <goal>jar</goal>
+		        </goals>
+		      </execution>
+		    </executions>
+	    </plugin>
+		
+		  <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-surefire-plugin</artifactId>
+		    <configuration>
+		      <properties>
+		        <property>
+		        	<!-- Prints out spaces and test name before/after every test method and automatically -->
+		          <name>listener</name>
+		          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
+		        </property>
+		       </properties>
+		    </configuration>
+		  </plugin>
+		
+		</plugins>
+	
+    <testResources>
+	    <testResource>
+	      <directory>src/test/resources</directory>
+	      <filtering>true</filtering>
+	    </testResource>
+    </testResources>
+			
+	</build>
+		
+	
+	
+  <repositories>
+  
+  	<repository>
+			<id>ebi-repo</id>
+			<name>EBI repo</name>
+			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
+		</repository>
+		
+		<repository>
+			<id>ebi-repo-snapshots</id>
+			<name>EBI repo</name>
+			<url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		
+  	<!-- OWL-API -->
+  	<repository>
+			<id>sonatype</id>
+			<url>http://oss.sonatype.org/content/groups/public</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>true</enabled></releases>  	
+  	</repository>
+				  	
+  </repositories>
+
+	<profiles>
+	</profiles>		
+
+</project>
