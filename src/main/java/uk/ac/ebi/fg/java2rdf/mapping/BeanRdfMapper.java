@@ -15,7 +15,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
- * A bean mapper has the purpose of mapping a Java Bean into RDF. 
+ * Maps a JavaBean object and its getter-reacheable properties onto a set of RDF statements.  
  *
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi
@@ -52,10 +52,12 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 	
 
 	/**
+	 * Creates a set of subject-centric statements, using {@link #getMappers()}, which usually contains mappers of 
+	 * getXXX()-reachable properties. Uses {@link #getRdfUriGenerator()} to get the URI of the 'source' parameter, 
+	 * i.e., the bean to be mapped. Uses {@link #getTargetRdfClassUri()} to make a rdf:type statement about 'source'.
 	 * 
-	 * Creates a set of subject-centric statements, using {@link #getPropertyMappers()}. Uses {@link #getRdfUriGenerator()}
-	 * to get the URI of the 'source' parameter, i.e., the bean to be mapped. Uses {@link #getTargetRdfClassUri()} to 
-	 * make a rdf:type statement about 'source'.
+	 * If either the super implementation, the URI generator, or its getUri() method returns false, doesn't generate any
+	 * mapping and returns false too. 
 	 */
 	@Override
 	public boolean map ( T source, Map<String, Object> params )
@@ -98,7 +100,7 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 		this.targetRdfClassUri = targetRdfClassUri;
 	}
 	
-	/** The generator used in {@link #map(Object)} to make the URI of the source bean that is mapped to RDF. */
+	/** The generator used in {@link #map(Object, Map)} to make the URI of the source bean that is mapped to RDF. */
 	public RdfUriGenerator<T> getRdfUriGenerator () {
 		return rdfUriGenerator;
 	}
@@ -107,6 +109,11 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 		this.rdfUriGenerator = rdfUriGenerator;
 	}
 	
+	/**
+	 * Usually you will want that {@link #getMappers()} contains {@link BeanPropRdfMapper} only. This method wraps
+	 * the propRdfMapper into a new {@link BeanPropRdfMapper}, having sourcePropertyName as the JavaBean property it works
+	 * with.
+	 */
 	public <PT> void addPropertyMapper ( String sourcePropertyName, PropertyRdfMapper<T, PT> propRdfMapper )
 	{
 		List<ObjRdfMapper<T>> mappers = this.getMappers ();

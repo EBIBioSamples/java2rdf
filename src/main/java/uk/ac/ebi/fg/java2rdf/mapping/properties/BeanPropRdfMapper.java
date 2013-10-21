@@ -10,7 +10,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 
 /**
- * TODO: Comment me!
+ * Maps a property in a JavaBean (i.e., getXXX) to an RDF statement, see details below. 
  *
  * <dl><dt>date</dt><dd>8 Aug 2013</dd></dl>
  * @author Marco Brandizi
@@ -35,10 +35,13 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 
 
 	/**
-	* Gets the value of the bean property {@link #getSourcePropertyName()} and then create a RDF statement
-	* uses {@link #map(Object, Object)}, which in turn usually yields a property/value statement having source as 
-	* subject and {@link #getTargetPropertyUri()} as RDF/OWL property.
-	*/
+	 * Gets the bean property indicated by {@link #getSourcePropertyName()} and maps it to an RDF statement about the bean
+	 * and its property value, by means of {@link #getPropertyMapper()}.
+	 * 
+	 * If there is no property mapper defined or the upper implementation returns false, then this method returns false too
+	 * and doesn't do any mapping.
+	 * 
+	 */
 	@Override
 	@SuppressWarnings ( "unchecked" )
 	public final boolean map ( T source, Map<String, Object> params ) throws RdfMappingException
@@ -63,6 +66,10 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 		}
 	}
 	
+	/**
+	 * The Java bean property that this mappes maps to RDF. E.g., if this returns 'Name', {@link #map(Object, Map)} will
+	 * invoke getName() to get an object value to be sent to the {@link #getPropertyMapper() property mapper}.   
+	 */
 	public String getSourcePropertyName ()
 	{
 		return sourcePropertyName;
@@ -73,6 +80,11 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 		this.sourcePropertyName = sourcePropertyName;
 	}
 
+	/**
+	 * This is invoked by {@link #map(Object, Map)} to map the source parameter and the property targeted by {@link #getSourcePropertyName()}
+	 * to an RDF statement.
+	 * 
+	 */
 	public PropertyRdfMapper<T, PT> getPropertyMapper ()
 	{
 		return propertyMapper;
@@ -83,6 +95,9 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 		this.propertyMapper = propertyMapper;
 	}
 
+	/**
+	 * This sets the factory of {@link #getPropertyMapper()} too.
+	 */
 	@Override
 	public void setMapperFactory ( RdfMapperFactory mapperFactory )
 	{

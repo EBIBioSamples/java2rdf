@@ -9,13 +9,9 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 
 /**
- * TODO: COMMENT ME AGAIN!!!
- * 
- * This is similar to {@link URIProvidedPropertyRdfMapper}, but it takes care of those JavaBean properties that return collections, 
- * i.e., multi-value properties. It uses an underlining {@link #getPropertyMapper() property mapper} to map each value 
- * of such a property into a RDF/OWL statement, every statement is spawned pretty by calling 
- * {@link URIProvidedPropertyRdfMapper#map(Object, Object)} for the underlining property mapper.
- *
+ *  This is similar t {@link PropertyRdfMapper}, but it's aware that the Java object property to be mapped has multiple
+ *  values, so {@link #map(Object, Collection, Map)} invokes the {@link #getPropertyMapper()} for each of such values.  
+ *  
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi
  *
@@ -34,9 +30,13 @@ public class CollectionPropRdfMapper<T, PT> extends PropertyRdfMapper<T, Collect
 	}
 
 	/**
-	 * For a property that returns a collection, it goes through all the collection values and invokes 
-	 * {@link #getPropertyMapper()}.{@link #map(Object, Collection)} for each value.
-	 *  
+	 * Goes through all the values returned by propValues and does the mapping in a way similar to what happens in 
+	 * {@link PropertyRdfMapper#map(Object, Object, Map)}, i.e., invoking {@link #getPropertyMapper()}
+	 * for every value in the collection.
+	 * 
+	 * if propValues is null or empty returns false. Else, it returns true if there is at least one value in propValues
+	 * for which {@link #getPropertyMapper()} returns true.
+	 * 
 	 */
 	@Override
 	public boolean map ( T source, Collection<PT> propValues, Map<String, Object> params )
@@ -45,9 +45,11 @@ public class CollectionPropRdfMapper<T, PT> extends PropertyRdfMapper<T, Collect
 		{
 			if ( propValues == null || propValues.isEmpty () ) return false; 
 
+			boolean result = false;
 			for ( PT pvalue: propValues ) 
-				propertyMapper.map ( source, pvalue, params );
-			return true;
+				result |= propertyMapper.map ( source, pvalue, params );
+			
+			return result;
 		} 
 		catch ( Exception ex )
 		{

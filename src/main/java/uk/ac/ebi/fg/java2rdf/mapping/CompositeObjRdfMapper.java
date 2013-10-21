@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Comment me!
+ * A composite Java object mapper. 
+ * 
+ * Follows the composite pattern to maps a Java object onto multiple RDF statements and using multiple predefined 
+ * {@link #getMappers() mappers}.
  *
  * <dl><dt>date</dt><dd>8 Aug 2013</dd></dl>
  * @author Marco Brandizi
@@ -25,6 +28,10 @@ public class CompositeObjRdfMapper<T> extends ObjRdfMapper<T>
 		if ( mappers != null ) this.setMappers ( Arrays.asList ( mappers ) );
 	}
 	
+	/**
+	 * Forward the mapping to each {@link #getMappers() composite mapper}.
+	 * @return true if at least one of the mapper component returns true.
+	 */
 	@Override
 	public boolean map ( T source, Map<String, Object> params )
 	{
@@ -37,6 +44,9 @@ public class CompositeObjRdfMapper<T> extends ObjRdfMapper<T>
 		return result;
 	}
 
+	/**
+	 * The composing mappers that this composite uses to realise the composite mapping. 
+	 */
 	public List<ObjRdfMapper<T>> getMappers ()
 	{
 		return this.mappers;

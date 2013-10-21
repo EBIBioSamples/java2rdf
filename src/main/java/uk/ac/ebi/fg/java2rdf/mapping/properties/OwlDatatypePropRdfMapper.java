@@ -8,16 +8,12 @@ import uk.ac.ebi.fg.java2rdf.mapping.BeanRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfLiteralGenerator;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
- * This maps a JavaBean property to an OWL data-type property. It uses {@link #getRdfLiteralGenerator()} to get the 
- * literal value that has to be used as the value for this property. For instance, this could be used in a {@link BeanRdfMapper}
- * about the Book Java class, to generate statements like http://rdf.example.com/isbn/123 dc:title 'I, Robot'. A 
- * {@link RdfUriGenerator} will be used for the rdf.example.com part, a data type mapper for 
- * dc:title (given by {@link #getSourcePropertyName()} and a {@link RdfLiteralGenerator} for extracting the title 
- * value 'I, Robot'.
+ * This maps a pair of Java objects by means of some OWL data type property. For instance, you may use this mapper
+ * to map Book.getTitle() via dc:title. The RDF literal value for such a mapping (i.e., the book title) is created
+ * by means of {@link #getRdfLiteralGenerator()}. 
  * 
  * @See {@link RdfLiteralGenerator}.
  * 
@@ -45,10 +41,8 @@ public class OwlDatatypePropRdfMapper<T, PT> extends URIProvidedPropertyRdfMappe
 	}
 	
 	/**
-	 * Uses {@link #getRdfLiteralGenerator()} to generate an RDF value for the property target value. Then it generates 
-	 * a triple where the property {@link #getSourcePropertyName()} is asserted for the source. 
-	 * Uses {@link RdfMapperFactory#getMapper(Object)} to get a mapper for the source and a URI from its 
-	 * {@link BeanRdfMapper#getRdfUriGenerator()}.
+	 * This maps (source, propValue) via {@link #getTargetPropertyUri()}. Uses {@link RdfMapperFactory#getUri(Object, Map)}
+	 * to get the URI of source, and {@link #getRdfLiteralGenerator()} to get the literal value for propValue.
 	 */
 	@Override
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
