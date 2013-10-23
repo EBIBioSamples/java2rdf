@@ -13,7 +13,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
  * 
  * Note that this mapper doesn't necessarily maps to a single RDF statement, nor does it always with the same 
  * OWL/RDF property. There are cases more generic than that, if you need such specific use case, use 
- * {@link URIProvidedPropertyRdfMapper}.
+ * {@link UriProvidedPropertyRdfMapper}.
  *
  * <dl><dt>date</dt><dd>8 Aug 2013</dd></dl>
  * @author Marco Brandizi

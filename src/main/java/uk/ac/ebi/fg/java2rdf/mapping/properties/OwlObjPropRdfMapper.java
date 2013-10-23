@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import uk.ac.ebi.fg.java2rdf.mapping.BeanRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
@@ -18,7 +17,7 @@ import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
  * @author Marco Brandizi
  *
  */
-public class OwlObjPropRdfMapper<T, PT> extends URIProvidedPropertyRdfMapper<T, PT>
+public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT>
 {
 	public OwlObjPropRdfMapper ()  {
 		super ();

@@ -4,21 +4,21 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 /**
  * While {@link PropertyRdfMapper} is generic and can map onto an arbitrary number of statements and using multiple
  * OWL/RDF property URIs, this subclass is intended for the use case where a pair of Java objects is always mapped 
- * by means of some property URI.
+ * by means of some RDF/OWL property, for which a property URI is available.
  * 
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi
  */
-public abstract class URIProvidedPropertyRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
+public abstract class UriProvidedPropertyRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 {
 	private String targetPropertyUri;
 	
-	public URIProvidedPropertyRdfMapper ()
+	public UriProvidedPropertyRdfMapper ()
 	{
 		this ( null );
 	}
 
-	public URIProvidedPropertyRdfMapper ( String targetPropertyUri )
+	public UriProvidedPropertyRdfMapper ( String targetPropertyUri )
 	{
 		super ();
 		this.setTargetPropertyUri ( targetPropertyUri );

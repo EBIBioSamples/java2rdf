@@ -25,7 +25,8 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlObjPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 
 /**
- * Tests and examples of basic usage. TODO: there are not so many assertions at the moment...
+ * Tests and examples of basic usage. 
+ * TODO: there are not so many JUnit assertions at the moment...
  *
  * <dl><dt>date</dt><dd>Apr 17, 2013</dd></dl>
  * @author Marco Brandizi

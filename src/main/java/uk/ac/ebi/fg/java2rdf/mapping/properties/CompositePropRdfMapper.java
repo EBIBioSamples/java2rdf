@@ -30,11 +30,11 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 		this.setPropertyMappers ( Arrays.asList ( propertyMappers ) );
 	}
 
-	public CompositePropRdfMapper ( String targetPropertyUri, URIProvidedPropertyRdfMapper<T, PT> ... propertyMappers ) 
+	public CompositePropRdfMapper ( String targetPropertyUri, UriProvidedPropertyRdfMapper<T, PT> ... propertyMappers ) 
 	{
 		this ( propertyMappers );
 		if ( propertyMappers == null ) return;
-		for ( URIProvidedPropertyRdfMapper<T, PT> pmapper: propertyMappers )
+		for ( UriProvidedPropertyRdfMapper<T, PT> pmapper: propertyMappers )
 			pmapper.setTargetPropertyUri ( targetPropertyUri );
 	}
 

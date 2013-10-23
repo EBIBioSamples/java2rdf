@@ -2,18 +2,28 @@ package uk.ac.ebi.fg.java2rdf.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 
 /**
- * TODO: Comment me!
+ * Some utilities that avoids to use OWL API directly, thus making things simpler and less interdependent.
+ * 
+ * All methods are synchronised, since we expect that the Java2RDF library will be used in a multi-threaded fashion. 
+ * 
+ * TODO: a good idea for the future is to make a completely generic API and plug-ins to common frameworks, such as
+ * Jena, Sesame, OWL-API etc.
  *
  * <dl><dt>date</dt><dd>Mar 23, 2013</dd></dl>
  * @author Marco Brandizi
@@ -25,12 +35,18 @@ public class OwlApiUtils
 	
 	private static final boolean DEBUG_FLAG = false;
 	
-	
+	/**
+	 * Wrapper with dataTypeUri = null.
+	 */
 	public static synchronized void assertData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue )
 	{
 		assertData ( model, subjectUri, propertyUri, propertyValue, null );
 	}
 	
+	/**
+	 * Asserts a statement by using {@link OWLDataPropertyAssertionAxiom}. If dataTypeUri = null, uses a default type
+	 * literal. 
+	 */
 	public static synchronized void assertData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue, String dataTypeUri )
 	{
 		checkNonNullTriple ( "assertData", subjectUri, propertyUri, propertyValue, dataTypeUri );
@@ -55,6 +71,9 @@ public class OwlApiUtils
 		));		
 	}
 
+	/**
+	 * Assert a statement using {@link OWLObjectPropertyAssertionAxiom}. 
+	 */
 	public static synchronized void assertLink ( OWLOntology model, String subjectUri, String propertyUri, String objectUri )
 	{
 		checkNonNullTriple ( "assertLink", subjectUri, propertyUri, objectUri, null );
@@ -70,6 +89,9 @@ public class OwlApiUtils
 		));
 	}
 	
+	/**
+	 * Assert that a subject URI is an OWL indiviudal, instance of a class URI. Uses {@link OWLClassAssertionAxiom}. 
+	 */
 	public static synchronized void assertIndividual ( OWLOntology model, String individualUri, String classUri ) 
 	{
 		if ( StringUtils.trimToNull ( individualUri ) == null || StringUtils.trimToNull ( classUri ) == null ) 
@@ -90,6 +112,9 @@ public class OwlApiUtils
 		));		
 	}
 
+	/**
+	 * Asserts that a given classUri is subClass of another superClassUri. Uses {@link OWLSubClassOfAxiom}.
+	 */
 	public static synchronized void assertClass ( OWLOntology model, String classUri, String superClassUri ) 
 	{
 		if ( StringUtils.trimToNull ( classUri ) == null || StringUtils.trimToNull ( superClassUri ) == null ) 
@@ -110,6 +135,9 @@ public class OwlApiUtils
 		));		
 	}
 	
+	/**
+	 * Asserts a statement assuming propertyUri is an annotation property. Uses {@link OWLAnnotationAssertionAxiom}.
+	 */
 	public static synchronized void assertAnnotationLink ( OWLOntology model, String subjectUri, String propertyUri, String objectUri )
 	{
 		checkNonNullTriple ( "assertAnnotationLink", subjectUri, propertyUri, objectUri, null );
@@ -125,12 +153,18 @@ public class OwlApiUtils
 		));
 	}
 	
+	/**
+	 * A wrapper with dataTypeUri = null.
+	 */
 	public static synchronized void assertAnnotationData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue ) 
 	{
 		assertAnnotationData ( model, subjectUri, propertyUri, propertyValue, null );
 	}
 
-	
+	/**
+	 * Asserts a statement assuming we have a data annotation property. Uses {@link OWLAnnotationAssertionAxiom}.
+	 * if dataTypeUri is null, uses a default literal type.
+	 */
 	public static synchronized void assertAnnotationData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue, String dataTypeUri )
 	{
 		checkNonNullTriple ( "assertAnnotationData", subjectUri, propertyUri, propertyValue, dataTypeUri );
@@ -155,6 +189,9 @@ public class OwlApiUtils
 		));
 	}
 	
+	/**
+	 * Used above to check that we have non-null parameters. dataTypeUri is not checked, only used to report error messages.
+	 */
 	private static void checkNonNullTriple ( String methodName, String subjectUri, String propertyUri, String objectValueOrUri, String dataTypeUri )
 	{
 		if ( StringUtils.trimToNull ( subjectUri ) == null 
