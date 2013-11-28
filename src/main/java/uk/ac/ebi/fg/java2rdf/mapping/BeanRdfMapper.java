@@ -34,12 +34,12 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 	}
 
 	public BeanRdfMapper ( String rdfClassUri ) {
-		this ( rdfClassUri, null, null );
+		this ( rdfClassUri, null, (ObjRdfMapper<T>[]) null );
 	}
 	
 
 	public BeanRdfMapper ( String rdfClassUri, RdfUriGenerator<T> rdfUriGenerator ) {
-		this ( rdfClassUri, rdfUriGenerator, null );
+		this ( rdfClassUri, rdfUriGenerator, (ObjRdfMapper<T>[]) null );
 	}
 	
 

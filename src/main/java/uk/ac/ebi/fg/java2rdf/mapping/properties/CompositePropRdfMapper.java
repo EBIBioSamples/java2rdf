@@ -21,15 +21,17 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	
 	public CompositePropRdfMapper ()
 	{
-		this ( null );
+		this ( (PropertyRdfMapper<T, PT>[]) null );
 	}
 
+	@SafeVarargs // TODO: value-by value param check
 	public CompositePropRdfMapper ( PropertyRdfMapper<T, PT> ... propertyMappers )
 	{
 		if ( propertyMappers == null ) return;
 		this.setPropertyMappers ( Arrays.asList ( propertyMappers ) );
 	}
 
+	@SafeVarargs // TODO: value-by value param check
 	public CompositePropRdfMapper ( String targetPropertyUri, UriProvidedPropertyRdfMapper<T, PT> ... propertyMappers ) 
 	{
 		this ( propertyMappers );

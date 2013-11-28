@@ -31,6 +31,9 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 		this.setObjectProperty ( isObjectProperty );
 	}
 
+	/**
+	 * Defaults to false.
+	 */
 	public UriStringPropRdfMapper ( String targetPropertyUri ) {
 		this ( targetPropertyUri, false );
 	}
