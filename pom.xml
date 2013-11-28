@@ -149,9 +149,35 @@
 	      <filtering>true</filtering>
 	    </testResource>
     </testResources>
+
+		<extensions>
+			<!-- Needed for scp-based deployment -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
 			
 	</build>
 		
+  <distributionManagement>
+
+	  <repository>
+		  <id>ebi-repo-old</id>
+		  <name>EBI Repository</name>
+		  <url>scp://ebi-001.ebi.ac.uk/homes/maven/public_html/m2repo</url>
+	  </repository>
+		
+	  <snapshotRepository>
+		  <uniqueVersion>false</uniqueVersion>
+		  <id>ebi-repo-old-snapshots</id>
+		  <name>EBI Snapshots Repository</name>
+		  <url>scp://ebi-001.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
+	  </snapshotRepository>
+	
+	
+  </distributionManagement>	
 	
 	
   <repositories>

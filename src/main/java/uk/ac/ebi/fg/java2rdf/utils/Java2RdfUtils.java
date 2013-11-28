@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 
 /**
@@ -18,6 +21,8 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
  */
 public class Java2RdfUtils
 {
+	private static Logger log = LoggerFactory.getLogger ( Java2RdfUtils.class );
+	
 	private Java2RdfUtils () {}
 
 	/**
@@ -40,6 +45,8 @@ public class Java2RdfUtils
 	
 		String hash = DatatypeConverter.printHexBinary ( messageDigest.digest ( sig.getBytes () ) );
 		hash = hash.toLowerCase ();
+		
+		log.trace ( "Returning hash '{}' from input '{}'", hash, sig );
 		
 		return hash;
 	}

@@ -22,14 +22,18 @@ public class NamespaceUtils
 {
 	private NamespaceUtils () {}
 	
+	static 
+	{
+		NAMESPACES = new HashMap<String, String> ();
+		
+		registerNs ( "dc-terms", 			"http://purl.org/dc/terms/" );  
+		registerNs ( "rdfs",			Namespaces.RDFS.toString () );
+	}
+	
 	/**
 	 * See the source to see which defaults are available.
 	 */
-	@SuppressWarnings ( "serial" )
-	private static final Map<String, String> NAMESPACES = new HashMap<String, String> () {{
-		put ( "dc-terms", 			"http://purl.org/dc/terms/" );  
-		put ( "rdfs",			Namespaces.RDFS.toString () );
-	}}; 
+	private static final Map<String, String> NAMESPACES; 
 	
 	public static String ns ( String prefix ) {
 		return NAMESPACES.get ( prefix );
