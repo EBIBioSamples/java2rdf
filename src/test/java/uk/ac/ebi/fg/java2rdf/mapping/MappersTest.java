@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CollectionPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CompositePropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.InversePropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlObjPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
@@ -217,6 +218,109 @@ public class MappersTest
 		
 		outputKB ();
 	}
+	
+	/**
+	 * A complete mapping example, written to show main mapping declarations in one place.
+	 * 
+	 * The output from this example is:
+	 * <pre>
+###  http://www.example.com/foo#a_test_child_1
+foo:a_test_child_1 rdf:type foo:FooChild ,
+                            owl:NamedIndividual ;
+
+                   foo:name "A test Child 1"^^xsd:string ;
+                   foo:description "A test description for a test child 1"^^xsd:string ;
+                   rdfs:comment "A test description for a test child 1"^^xsd:string ;
+                   foo:has-parent foo:a_test_object ;
+                   foo:is-parent-of foo:a_test_object .
+
+###  http://www.example.com/foo#a_test_child_2
+foo:a_test_child_2 rdf:type foo:FooChild ,
+                            owl:NamedIndividual ;
+                   foo:name "A test Child 2"^^xsd:string ;
+                   rdfs:comment "A test description for a test child 2"^^xsd:string ;
+                   foo:description "A test description for a test child 2"^^xsd:string ;
+                   foo:has-parent foo:a_test_object ;
+                   foo:is-parent-of foo:a_test_object .
+
+###  http://www.example.com/foo#a_test_object
+foo:a_test_object rdf:type foo:Foo ,
+                           owl:NamedIndividual ;
+                  foo:name "A Test Object"^^xsd:string ;
+                  rdfs:comment "A test description"^^xsd:string ;
+                  foo:description "A test description"^^xsd:string ;
+                  foo:has-child foo:a_test_child_1 ,
+                                foo:a_test_child_2 .
+	 * </pre>
+	 */
+	@Test
+	public void testCompleteExample () throws OWLOntologyCreationException, OWLOntologyStorageException 
+	{
+		RdfMapperFactory mapFactory = new RdfMapperFactory ( onto ) {{
+			this.setKnowledgeBase ( onto );
+			this.setMapper ( Foo.class, new BeanRdfMapper<Foo> () {{
+				// How beans of Foo type generates URI identifiers
+				this.setRdfUriGenerator ( new RdfUriGenerator<Foo> () {
+					@Override
+					public String getUri ( Foo source, Map<String, Object> params ) {
+						return FOONS + source.getName ().toLowerCase ().replace ( ' ', '_' );
+					}
+				});
+			
+				// How they are mapped to a RDFS/OWL class
+				this.setRdfClassUri ( FOONS + "Foo" );
+				
+				// How the properties for beans of type F are mapped to RDF/OWL.
+				this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "name" ) );
+				
+				// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
+				this.addPropertyMapper ( "description", new CompositePropRdfMapper<Foo, String> (
+					new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "description" ),
+					new OwlDatatypePropRdfMapper<Foo, String> ( ns ( "rdfs", "comment" ) ) 
+				));
+
+				// One-to-many relationship
+				this.addPropertyMapper ( "children",
+					new CollectionPropRdfMapper<Foo, FooChild> ( new OwlObjPropRdfMapper<Foo, FooChild> ( FOONS + "has-child") ));
+				
+				// Maps from the related objects, instead of the current subject
+				this.addPropertyMapper ( "children",
+					new CollectionPropRdfMapper<Foo, FooChild> (
+						new InversePropRdfMapper<Foo, FooChild> ( 
+							// This is mapped a second time below, with another RDF property
+							new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "is-parent-of" )
+				)));
+				
+			}}); // Foo mapper
+
+			// One-One or Many-to-One relationship
+			this.setMapper ( FooChild.class, new FooMapper<FooChild> () {{
+				this.setRdfClassUri ( FOONS + "FooChild" );
+				this.addPropertyMapper ( "parent", new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
+			}});
+		}};
+		
+		Set<FooChild> children = foo.getChildren ();
+
+		FooChild child1 = new FooChild ();
+		child1.setName ( "A test Child 1" );
+		child1.setDescription ( "A test description for a test child 1" );
+		children.add ( child1 );
+
+		FooChild child2 = new FooChild ();
+		child2.setName ( "A test Child 2" );
+		child2.setDescription ( "A test description for a test child 2" );
+		children.add ( child2 );
+
+		// Loop is avoided here by keeping track of already-mapped objects in the map factory. 
+		child1.setParent ( foo );
+		child2.setParent ( foo );
+		
+		mapFactory.map ( foo );
+		
+		outputKB ();
+	}
+	
 	
 	private void outputKB () throws OWLOntologyStorageException
 	{
