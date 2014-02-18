@@ -25,7 +25,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
  * TODO: a good idea for the future is to make a completely generic API and plug-ins to common frameworks, such as
  * Jena, Sesame, OWL-API etc.
  *
- * <dl><dt>date</dt><dd>Mar 23, 2013</dd></dl>
+ * <dl><dt>date</dt><dd>6 Feb 2014</dd></dl>
  * @author Marco Brandizi
  *
  */
