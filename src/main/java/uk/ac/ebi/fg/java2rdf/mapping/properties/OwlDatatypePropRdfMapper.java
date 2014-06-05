@@ -2,7 +2,8 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
@@ -48,15 +49,23 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 	{
 		try
 		{
-			if ( propValue == null ) return false;
+			if ( !super.map ( source, propValue, params ) ) return false;
 			
 			RdfMapperFactory mapFactory = this.getMapperFactory ();
+			Validate.notNull ( mapFactory, "Internal error: %s must be linked to a mapper factory", this.getClass ().getSimpleName () );
+
+			String subjUri = mapFactory.getUri ( source, params );
+			if ( subjUri == null ) return false;
+
 			RdfLiteralGenerator<PT> targetValGen = this.getRdfLiteralGenerator ();
+			Validate.notNull ( mapFactory, "Internal error: cannot map a OWL data property without a literal generator" );
+			
 			String targetRdfVal = targetValGen.getValue ( propValue, params );
 			if ( targetRdfVal == null ) return false;
 			
 			OwlApiUtils.assertData ( this.getMapperFactory ().getKnowledgeBase (), 
-				mapFactory.getUri ( source, params ), this.getTargetPropertyUri (), targetRdfVal );
+				subjUri, this.getTargetPropertyUri (), targetRdfVal );
+			
 			return true;
 		} 
 		catch ( Exception ex )

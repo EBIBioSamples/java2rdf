@@ -3,7 +3,8 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
@@ -43,8 +44,11 @@ public class CollectionPropRdfMapper<T, PT> extends PropertyRdfMapper<T, Collect
 	{
 		try
 		{
-			if ( propValues == null || propValues.isEmpty () ) return false; 
+			if ( !super.map ( source, propValues, params ) || propValues.isEmpty () ) return false;
 
+			Validate.notNull ( propertyMapper, "Internal error: cannot map [%s] to RDF with an empty property mapper", 
+				StringUtils.abbreviate ( propValues.toString (), 30 ) 
+			);
 			boolean result = false;
 			for ( PT pvalue: propValues ) 
 				result |= propertyMapper.map ( source, pvalue, params );

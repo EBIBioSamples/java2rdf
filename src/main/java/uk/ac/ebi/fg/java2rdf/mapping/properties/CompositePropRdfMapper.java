@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import uk.ac.ebi.fg.java2rdf.mapping.CompositeObjRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
+import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 
 /**
  * A composite property mapper. Similarly to {@link CompositeObjRdfMapper}, this uses the composite pattern to map 
@@ -49,8 +52,12 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	@Override
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
 	{
-		if ( propertyMappers == null || propertyMappers.isEmpty () ) return false;
 		if ( !super.map ( source, propValue, params ) ) return false;
+		if ( propertyMappers == null || propertyMappers.isEmpty () ) throw new RdfMappingException ( String.format ( 
+			"Internal error: cannot map [%s, %s] to RDF without property mappers", 
+			StringUtils.abbreviate ( source.toString (), 30 ),
+			StringUtils.abbreviate ( propValue.toString (), 30 )
+		));
 		
 		boolean result = false;
 		for ( PropertyRdfMapper<T, PT> mapper: this.propertyMappers )

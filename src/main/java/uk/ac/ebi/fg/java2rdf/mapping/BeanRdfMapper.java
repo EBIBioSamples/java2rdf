@@ -5,7 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,15 +66,20 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 		try
 		{
 			if ( !super.map ( source, params )) return false;
-			String uri = getRdfUriGenerator ().getUri ( source, params );
+			
+			RdfUriGenerator<T> uriGen = getRdfUriGenerator ();
+			Validate.notNull ( uriGen, "Internal error: cannot map [%s] to RDF without a URI generator", source.toString () );
+			
+			String uri = uriGen.getUri ( source, params );
 			if ( uri == null ) return false;
 			
 			RdfMapperFactory mapFactory = this.getMapperFactory ();
 			
 			// Generates and rdf:type statement
 			String targetRdfClassUri = getTargetRdfClassUri ();
-			if ( targetRdfClassUri != null ) OwlApiUtils.assertIndividual ( mapFactory.getKnowledgeBase (), 
-					getRdfUriGenerator ().getUri ( source, params ), targetRdfClassUri );
+			if ( targetRdfClassUri != null ) OwlApiUtils.assertIndividual ( 
+				mapFactory.getKnowledgeBase (), uri, targetRdfClassUri 
+			);
 			// TODO: else WARN
 			return true;
 		} 

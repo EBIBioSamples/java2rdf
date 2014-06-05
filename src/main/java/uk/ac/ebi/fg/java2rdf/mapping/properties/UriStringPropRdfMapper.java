@@ -4,7 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
@@ -56,11 +57,12 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 	public boolean map ( T source, String propValue, Map<String, Object> params )
 	{
 		propValue = StringUtils.trimToNull ( propValue );
-		if ( propValue == null ) return false;
+		if ( !super.map ( source, propValue, params ) ) return false;
 		
 		try
 		{
 			RdfMapperFactory mapFactory = this.getMapperFactory ();
+			Validate.notNull ( mapFactory, "Internal error: %s must be linked to a mapper factory", this.getClass ().getSimpleName () );
 			
 			// TODO: can we avoid to keep recomputing these
 			//

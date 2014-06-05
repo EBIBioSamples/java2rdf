@@ -2,6 +2,9 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 
 /**
@@ -37,10 +40,15 @@ public class InversePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	 */
 	public boolean map ( T source, PT propValue, Map<String, Object> params ) 
 	{
-		if ( this.inversePropMapper == null ) return false;
-		if ( propValue == null ) return false;
+		if ( !super.map ( source, propValue, params ) ) return false;
+
+		Validate.notNull ( inversePropMapper, "Cannot map [%s, %s] to RDF with an empty inverse property mapper", 
+			StringUtils.abbreviate ( source.toString (), 30 ), 
+			StringUtils.abbreviate ( propValue.toString (), 30 ) 
+		);
 		
-		return inversePropMapper.map ( propValue, source, params );
+		// Map the value, since if it comes here as a result of an inversion, it will be mapped nowhere else
+		return inversePropMapper.map ( propValue, source, params ) & getMapperFactory ().map ( propValue, params );
 	}
 
 	/**

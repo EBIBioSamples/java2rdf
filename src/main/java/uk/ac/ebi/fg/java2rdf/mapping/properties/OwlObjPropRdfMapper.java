@@ -2,7 +2,8 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
@@ -36,10 +37,12 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 	@Override
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
 	{
-		if ( propValue == null ) return false;
+		if ( !super.map ( source, propValue, params ) ) return false;
+		
 		try
 		{
 			RdfMapperFactory mapFactory = this.getMapperFactory ();
+			Validate.notNull ( mapFactory, "Internal error: %s must be linked to a mapper factory", this.getClass ().getSimpleName () );
 			
 			// TODO: can we avoid to keep recomputing these
 			//
@@ -51,10 +54,10 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 			String objUri = mapFactory.getUri ( propValue, params );
 			if ( objUri == null ) return false;
 			
-			OwlApiUtils.assertLink ( this.getMapperFactory ().getKnowledgeBase (), 
+			OwlApiUtils.assertLink ( mapFactory.getKnowledgeBase (), 
 				subjUri, this.getTargetPropertyUri (), objUri );
 
-			// Don't use targetMapper, we need to trace this visit.
+			// Don't use targetMapper directly, we need to trace this visit.
 			return mapFactory.map ( propValue, params );
 		} 
 		catch ( Exception ex )

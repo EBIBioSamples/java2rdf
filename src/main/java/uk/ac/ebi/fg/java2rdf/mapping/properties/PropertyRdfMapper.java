@@ -2,6 +2,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
 	 */
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
 	{
+		Validate.notNull ( source, "Internal error: cannot map a null source object to RDF" );
 		if ( propValue == null ) return false;
 		return true;
 	}

@@ -3,7 +3,8 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.ObjRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
@@ -46,7 +47,11 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 	@SuppressWarnings ( "unchecked" )
 	public final boolean map ( T source, Map<String, Object> params ) throws RdfMappingException
 	{
-		if ( propertyMapper == null ) return false;
+		if ( source == null ) return false;
+		
+		Validate.notNull ( propertyMapper, "Internal error: cannot map [%s] with a null propertyMapper", 
+			StringUtils.abbreviate ( source.toString (), 30 ) 
+		);
 
 		PT pval = null;
 		try

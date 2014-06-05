@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
@@ -46,8 +47,10 @@ public class RdfMapperFactory
 	/**
 	 * The default implementation provides a mapper by looking at the class of the source object, via {@link #getMappers()}. 
 	 */
-	public <T> ObjRdfMapper<T> getMapper ( T source ) {
-		return source == null ? null : (ObjRdfMapper<T>) this.getMapper ( source.getClass () );
+	public <T> ObjRdfMapper<T> getMapper ( T source ) 
+	{
+		Validate.notNull ( source, "Cannot map a null source object" );
+		return (ObjRdfMapper<T>) this.getMapper ( source.getClass () );
 	}
 
 	/** 
@@ -57,8 +60,10 @@ public class RdfMapperFactory
 	 */
 	public <T> ObjRdfMapper<T> getMapper ( Class<T> clazz ) 
 	{
-		if ( clazz == null ) return null;
-		return mappers == null ? null : mappers.get ( clazz );
+		Validate.notNull ( clazz, "Internal error: cannot map a null class" );
+		Validate.notNull ( mappers, "Internal error: Please initialise the Java2RDF framework with a set of mappers, "
+			+ "before requesting a mapper for '%s'", clazz.getSimpleName () );
+		return mappers.get ( clazz );
 	}
 
 	/**
@@ -69,7 +74,7 @@ public class RdfMapperFactory
 	public <T> ObjRdfMapper setMapper ( Class<T> clazz,  ObjRdfMapper<T> mapper ) 
 	{
 		Validate.notNull ( clazz, "Internal error: I cannot map a null class to RDF" );
-		Validate.notNull ( mapper, "Internal error: I cannot map '" + clazz.getSimpleName () + "' to RDF using a null mapper" );
+		Validate.notNull ( mapper, "Internal error: I cannot map '%s' to RDF using a null mapper", clazz.getSimpleName () );
 		
 		if ( mappers == null ) mappers = new HashMap<> ();
 		mapper.setMapperFactory ( this );
@@ -114,13 +119,11 @@ public class RdfMapperFactory
 	 */
 	public <T> boolean map ( T source, Map<String, Object> params )
 	{
-		if ( mappers == null ) return false;
 		if ( source == null ) return false;
 		if ( this.visitedObjects.contains ( source ) ) return false;
 			
 		ObjRdfMapper<T> mapper = getMapper ( source );
-		if ( mapper == null ) throw new RuntimeException ( 
-			"Cannot find a mapper for " + source.getClass ().getSimpleName () );
+		Validate.notNull ( mapper, "Cannot find a mapper for '%s'", source.getClass ().getSimpleName () );
 		
 		this.visitedObjects.add ( source );
 		return mapper.map ( source, params ); 
@@ -135,9 +138,12 @@ public class RdfMapperFactory
 	 */
 	public <T> RdfUriGenerator<T> getRdfUriGenerator ( Class<T> clazz ) 
 	{
-		if ( clazz == null ) return null;
+		Validate.notNull ( clazz, "Internal error: I cannot have a URI generator for a null class" );
 		ObjRdfMapper<T> mapper = getMapper ( clazz );
-		if ( ! ( mapper instanceof BeanRdfMapper) ) return null;
+		if ( ! ( mapper instanceof BeanRdfMapper) ) throw new RdfMappingException ( 
+			"Internal error: the mapper '" + mapper.getClass ().getSimpleName () + "' is not a BeanRdfMapper and I cannot get "
+			+ "a URI generator from it" 
+		);
 		return ((BeanRdfMapper) mapper).getRdfUriGenerator ();
 	} 
 	
@@ -146,7 +152,7 @@ public class RdfMapperFactory
 	 */
 	public <T> RdfUriGenerator<T> getRdfUriGenerator ( T source ) 
 	{
-		if ( source == null ) return null; 
+		Validate.notNull ( source, "Internal error: I cannot have any URI generator for a null source object" );
 		return (RdfUriGenerator<T>) this.getRdfUriGenerator ( source.getClass() );
 	}
 	
@@ -157,10 +163,11 @@ public class RdfMapperFactory
 	 */
 	public <T> String getUri ( T source, Map<String, Object> params ) 
 	{
-		if ( source == null ) return null; 
+		Validate.notNull ( source, "Internal error: cannot map a null source object to RDF" );
 		
 		RdfUriGenerator<T> uriGen = this.getRdfUriGenerator ( source );
-		if ( uriGen == null ) return null;
+		Validate.notNull ( uriGen,
+			"Internal error: cannot map [%s] with a null URI generator", StringUtils.abbreviate ( source.toString (), 30 ) );
 		
 		return uriGen.getUri ( source, params );
 	}
