@@ -1,12 +1,17 @@
 package uk.ac.ebi.fg.java2rdf.utils;
 
+import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.getNamespaces;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.semanticweb.owlapi.vocab.Namespaces;
+import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
 /**
  * <p>A utility class that basically has the purpose of keeping a map from prefixes to namespaces and return the namespace
@@ -26,8 +31,10 @@ public class NamespaceUtils
 	{
 		NAMESPACES = new HashMap<String, String> ();
 		
-		registerNs ( "dc-terms", 			"http://purl.org/dc/terms/" );  
-		registerNs ( "rdfs",			Namespaces.RDFS.toString () );
+		registerNs ( "rdf",					Namespaces.RDF.toString () );
+		registerNs ( "rdfs",				Namespaces.RDFS.toString () );
+		registerNs ( "owl",					Namespaces.OWL.toString () );
+		registerNs ( "dc-terms", 		"http://purl.org/dc/terms/" );  
 	}
 	
 	/**
@@ -59,5 +66,14 @@ public class NamespaceUtils
 
 	public static void registerNs ( String prefix, String uri ) {
 		NAMESPACES.put ( prefix, uri );
+	}
+
+	/**
+	 * Copies all the namespaces into the structure that OWLAPI uses to build its output 
+	 */
+	public static void copy2OwlApi ( PrefixOWLOntologyFormat owlApiPrefixes )
+	{
+		for ( Entry<String, String> nse: getNamespaces ().entrySet () )
+			owlApiPrefixes.setPrefix ( nse.getKey (), nse.getValue () );
 	}
 }

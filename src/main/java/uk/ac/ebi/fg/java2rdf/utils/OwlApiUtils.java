@@ -189,8 +189,86 @@ public class OwlApiUtils
 		));
 	}
 	
+	
+	
+	/**
+	 * Wrapper with dataTypeUri = null.
+	 */
+	public static synchronized boolean testDataAssertionData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue )
+	{
+		return testDataAssertionData ( model, subjectUri, propertyUri, propertyValue, null );
+	}
+	
+	/**
+	 * Checks if this statement about a data property exists. If dataTypeUri = null, uses a default type
+	 * literal. 
+	 */
+	public static synchronized boolean testDataAssertionData ( OWLOntology model, String subjectUri, String propertyUri, String propertyValue, String dataTypeUri )
+	{
+		checkNonNullTriple ( "testDataAssertionData", subjectUri, propertyUri, propertyValue, dataTypeUri );
+		
+		OWLOntologyManager owlMgr = model.getOWLOntologyManager ();
+		OWLDataFactory owlFactory = owlMgr.getOWLDataFactory ();
+		
+    OWLLiteral literal;
+    if ( dataTypeUri == null )
+    	literal = owlFactory.getOWLLiteral ( propertyValue );
+    else
+    {
+    	OWLDatatype dataType = owlFactory.getOWLDatatype ( IRI.create ( dataTypeUri ) );
+    	literal = owlFactory.getOWLLiteral ( propertyValue, dataType );
+    }
+
+		return model.containsAxiomIgnoreAnnotations ( owlFactory.getOWLDataPropertyAssertionAxiom ( 
+			owlFactory.getOWLDataProperty ( IRI.create( propertyUri )), 
+			owlFactory.getOWLNamedIndividual ( IRI.create ( subjectUri )),
+			literal
+		));		
+	}
+
+	/**
+	 * Checks if this statement about an object property exists.
+	 */
+	public static synchronized boolean testLinkAssertion ( OWLOntology model, String subjectUri, String propertyUri, String objectUri )
+	{
+		checkNonNullTriple ( "testLinkAssertion", subjectUri, propertyUri, objectUri, null );
+
+		OWLOntologyManager owlMgr = model.getOWLOntologyManager ();
+		OWLDataFactory owlFactory = owlMgr.getOWLDataFactory ();
+
+		return model.containsAxiom ( owlFactory.getOWLObjectPropertyAssertionAxiom ( 
+			owlFactory.getOWLObjectProperty ( IRI.create( propertyUri )), 
+			owlFactory.getOWLNamedIndividual ( IRI.create ( subjectUri )),  
+			owlFactory.getOWLNamedIndividual ( IRI.create ( objectUri ))  
+		));
+	}
+	
+	/**
+	 * Assert that a subject URI is an OWL indiviudal, instance of a class URI. Uses {@link OWLClassAssertionAxiom}. 
+	 */
+	public static synchronized boolean testIndividual ( OWLOntology model, String individualUri, String classUri ) 
+	{
+		if ( StringUtils.trimToNull ( individualUri ) == null || StringUtils.trimToNull ( classUri ) == null ) 
+			throw new RdfMappingException ( String.format ( 
+				"assertIndividual ( '%s', '%s' ): cannot accept null paramters",
+				individualUri, classUri
+		)); 
+
+		OWLOntologyManager owlMgr = model.getOWLOntologyManager ();
+		OWLDataFactory owlFactory = owlMgr.getOWLDataFactory ();
+				
+		return model.containsAxiom ( owlFactory.getOWLClassAssertionAxiom (
+			owlFactory.getOWLClass ( IRI.create ( classUri )), 
+			owlFactory.getOWLNamedIndividual( IRI.create ( individualUri ))
+		));		
+	}	
+	
+	
+	
 	/**
 	 * Used above to check that we have non-null parameters. dataTypeUri is not checked, only used to report error messages.
+	 * methodName is only used for logging.
+	 * 
 	 */
 	private static void checkNonNullTriple ( String methodName, String subjectUri, String propertyUri, String objectValueOrUri, String dataTypeUri )
 	{
@@ -212,4 +290,5 @@ public class OwlApiUtils
 			methodName, subjectUri, propertyUri, StringUtils.abbreviate ( objectValueOrUri, 50 ) } 
 		);
 	}
+	
 }
