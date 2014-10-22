@@ -1,7 +1,5 @@
 package uk.ac.ebi.fg.java2rdf.utils;
 
-import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.getNamespaces;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +7,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
