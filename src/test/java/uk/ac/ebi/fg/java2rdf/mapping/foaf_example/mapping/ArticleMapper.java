@@ -43,11 +43,9 @@ public class ArticleMapper extends BeanRdfMapper<Article>
 		this.addPropertyMapper ( "editor", new OwlObjPropRdfMapper<Article, Person> ( ns ( "dc-terms", "publisher" )) );
 
 		// How to map collection properties ( maps Set<Person> getAuthors () )
-		this.addPropertyMapper ( "authors",
-			new CollectionPropRdfMapper<Article, Person> ( 
-				new OwlObjPropRdfMapper<Article, Person> ( ns ( "dc-terms", "creator" ) ) 
-			)
-		);
+		this.addPropertyMapper ( "authors", new CollectionPropRdfMapper<Article, Person> ( 
+			new OwlObjPropRdfMapper<Article, Person> ( ns ( "dc-terms", "creator" ) ) 
+		));
 		
 		// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 		// ( maps String getAbstractText() ) 
