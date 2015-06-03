@@ -1,7 +1,7 @@
 package uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping;
 
 import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.hashUriSignature;
-import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.ns;
+import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.uri;
 
 import java.util.Map;
 
@@ -25,15 +25,15 @@ public class PersonMapper extends BeanRdfMapper<Person>
 		this.setRdfUriGenerator ( new RdfUriGenerator<Person> () {
 			@Override
 			public String getUri ( Person source, Map<String, Object> params ) {
-				return ns ( "ex", "person/" + hashUriSignature ( source.getEmail () ) );
+				return uri ( "ex", "person/" + hashUriSignature ( source.getEmail () ) );
 			}
 		});
 		
 		// How they are mapped to a RDFS/OWL class
-		this.setRdfClassUri ( ns ( "foaf", "Person" ) );
+		this.setRdfClassUri ( uri ( "foaf", "Person" ) );
 		
 		// How to map primitive Java type to OWL datatype properties (or RDF-S).
-		this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Person, String> ( ns ( "foaf", "givenName" ) ) );
-		this.addPropertyMapper ( "surname", new OwlDatatypePropRdfMapper<Person, String> ( ns ( "foaf", "familyName" ) ) );
+		this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Person, String> ( uri ( "foaf", "givenName" ) ) );
+		this.addPropertyMapper ( "surname", new OwlDatatypePropRdfMapper<Person, String> ( uri ( "foaf", "familyName" ) ) );
 	}	
 }

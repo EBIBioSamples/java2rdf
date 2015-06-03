@@ -28,10 +28,11 @@ public class NamespaceUtils
 	{
 		NAMESPACES = new HashMap<String, String> ();
 		
-		registerNs ( "rdf",					Namespaces.RDF.toString () );
-		registerNs ( "rdfs",				Namespaces.RDFS.toString () );
-		registerNs ( "owl",					Namespaces.OWL.toString () );
-		registerNs ( "dc-terms", 		"http://purl.org/dc/terms/" );  
+		registerNs ( "rdf",				Namespaces.RDF.toString () );
+		registerNs ( "rdfs",			Namespaces.RDFS.toString () );
+		registerNs ( "owl",				Namespaces.OWL.toString () );
+		registerNs ( "xsd", 			Namespaces.XSD.toString () );
+		registerNs ( "dc-terms", 	"http://purl.org/dc/terms/" );
 	}
 	
 	/**
@@ -43,13 +44,20 @@ public class NamespaceUtils
 		return NAMESPACES.get ( prefix );
 	}
 	
-	public static String ns ( String prefix, String relativePath ) 
+	public static String uri ( String prefix, String relativePath ) 
 	{
 		prefix = StringUtils.trimToNull ( prefix );
 		Validate.notNull ( prefix, "Cannot resolve empty namespace prefix" );
 		String namespace = NAMESPACES.get ( prefix );
 		Validate.notNull ( namespace, "Namespace prefix '" + prefix + "' not found" );
 		return namespace + relativePath;
+	}
+	
+	public static String uri ( String prefixedUri )
+	{
+		String[] chunks = StringUtils.split ( prefixedUri, ':' );
+		if ( chunks == null || chunks.length < 2 ) return prefixedUri;
+		return uri ( chunks [ 0 ], chunks [ 1 ] );
 	}
 	
 	/**
@@ -72,5 +80,17 @@ public class NamespaceUtils
 	{
 		for ( Entry<String, String> nse: getNamespaces ().entrySet () )
 			owlApiPrefixes.setPrefix ( nse.getKey (), nse.getValue () );
+	}
+	
+	/**
+	 * Builds a list of {@code PREFIX x <y>\n} from the current list of managed prefixes, 
+	 * list that can be used as prolog for SPARQL queries. 
+	 */
+	public static String asSPARQLProlog ()
+	{
+		StringBuilder result = new StringBuilder ();
+		for ( Entry<String, String> nse: getNamespaces ().entrySet () )
+			result.append ( String.format ( "PREFIX %s: <%s>\n", nse.getKey (), nse.getValue () ) );
+		return result.toString ();
 	}
 }

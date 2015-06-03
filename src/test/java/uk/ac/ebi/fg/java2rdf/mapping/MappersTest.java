@@ -1,6 +1,6 @@
 package uk.ac.ebi.fg.java2rdf.mapping;
 
-import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.ns;
+import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.uri;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -104,7 +104,7 @@ public class MappersTest
 			// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 			this.addPropertyMapper ( "description", new CompositePropRdfMapper<> (
 				new OwlDatatypePropRdfMapper<F, String> ( FOONS + "description" ),
-				new OwlDatatypePropRdfMapper<F, String> ( ns ( "rdfs", "comment" ) ) 
+				new OwlDatatypePropRdfMapper<F, String> ( uri ( "rdfs:comment" ) ) 
 			));
 		}
 	}
@@ -146,7 +146,7 @@ public class MappersTest
 				this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "name" ) );
 				this.addPropertyMapper ( "description", new CompositePropRdfMapper<> (
 					new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "description" ),
-					new OwlDatatypePropRdfMapper<Foo, String> ( ns ( "rdfs", "comment" ) ) 
+					new OwlDatatypePropRdfMapper<Foo, String> ( uri ( "rdfs", "comment" ) ) 
 				));
 			}});
 		}};
@@ -276,7 +276,7 @@ foo:a_test_object rdf:type foo:Foo ,
 				// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 				this.addPropertyMapper ( "description", new CompositePropRdfMapper<Foo, String> (
 					new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "description" ),
-					new OwlDatatypePropRdfMapper<Foo, String> ( ns ( "rdfs", "comment" ) ) 
+					new OwlDatatypePropRdfMapper<Foo, String> ( uri ( "rdfs", "comment" ) ) 
 				));
 
 				// One-to-many relationship
