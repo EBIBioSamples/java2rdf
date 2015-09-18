@@ -32,7 +32,8 @@ public class NamespaceUtils
 		registerNs ( "rdfs",			Namespaces.RDFS.toString () );
 		registerNs ( "owl",				Namespaces.OWL.toString () );
 		registerNs ( "xsd", 			Namespaces.XSD.toString () );
-		registerNs ( "dc-terms", 	"http://purl.org/dc/terms/" );
+		registerNs ( "dc", 				Namespaces.DC.toString () );
+		registerNs ( "dc-terms", 	Namespaces.DCTERMS.toString () );
 	}
 	
 	/**
