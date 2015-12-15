@@ -8,6 +8,7 @@ import org.apache.commons.lang3.Validate;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfLiteralGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
@@ -22,9 +23,7 @@ import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
  *
  */
 public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT>
-{
-	private RdfLiteralGenerator<PT> rdfLiteralGenerator;
-	
+{	
 	public OwlDatatypePropRdfMapper ()  {
 		this ( null, new RdfLiteralGenerator<PT> () );
 	}
@@ -83,13 +82,31 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 
 	/**
 	 * This generates the literal value (a plain string at the moment) to be used to map an object which is the value
-	 * of a JavaBean property into a string representation of such value. 
+	 * of a JavaBean property into a string representation of such value.
+	 * 
+	 * This is a convenience wrapper of {@link #getRdfValueGenerator()}
 	 */
 	public RdfLiteralGenerator<PT> getRdfLiteralGenerator () {
-		return rdfLiteralGenerator;
+		return (RdfLiteralGenerator<PT>) this.getRdfValueGenerator ();
 	}
 
 	public void setRdfLiteralGenerator ( RdfLiteralGenerator<PT> rdfLiteralGenerator ) {
-		this.rdfLiteralGenerator = rdfLiteralGenerator;
+		this.setRdfValueGenerator ( rdfLiteralGenerator );
 	}
+
+	
+	/** 
+	 * Forces the type to be a {@link RdfLiteralGenerator}.
+	 */
+	@Override
+	public void setRdfValueGenerator ( RdfValueGenerator<PT> rdfValueGenerator )
+	{
+		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfLiteralGenerator ) ) 
+			throw new IllegalArgumentException ( 
+				"setRdfValueGenerator() must get a type of type RdfValueGenerator for " + this.getClass ().getSimpleName () + 
+				", refusing the type " + rdfValueGenerator.getClass ().getName ()
+		); 
+		super.setRdfValueGenerator ( rdfValueGenerator );
+	}
+	
 }

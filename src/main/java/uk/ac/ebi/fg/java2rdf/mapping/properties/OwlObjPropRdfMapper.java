@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
@@ -51,7 +52,13 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 			String subjUri = mapFactory.getUri ( source, params );
 			if ( subjUri == null ) return false;
 
-			String objUri = mapFactory.getUri ( propValue, params );
+			// Gets the URI for the property target. This either uses the associated property generator, or it asks the 
+			// factory to use the URI generator that is associated to the Java type the property target is instance of
+			RdfValueGenerator<PT> objValGenerator = this.getRdfValueGenerator ();
+			String objUri = objValGenerator != null 
+				? objValGenerator.getValue ( propValue, params ) 
+				: mapFactory.getUri ( propValue, params );
+			
 			if ( objUri == null ) return false;
 			
 			OwlApiUtils.assertLink ( mapFactory.getKnowledgeBase (), 

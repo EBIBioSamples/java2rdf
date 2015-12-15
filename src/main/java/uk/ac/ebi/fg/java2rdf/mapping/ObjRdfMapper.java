@@ -15,7 +15,7 @@ public abstract class ObjRdfMapper<T> extends RdfMapper<T>
 	/**
 	 * Does the mapping. This is expected to generate RDF triples into {@link #getKnowledgeBase()}. 
 	 * 
-	 * Avoid to call this method directly, use {@link RdfMapperFactory#map(Object)} instead. This will trace the
+	 * Avoid to call this method directly, use {@link RdfMapperFactory#map(Object, Map)} instead. This will trace the
 	 * objects that are already mapped.
 	 * 
 	 * The params can contain additional parameters needed to do the mappings.

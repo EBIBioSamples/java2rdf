@@ -6,7 +6,11 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.ebi.fg.java2rdf.mapping.ObjRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
 
 /**
  * A generic mapper that maps a Java object pair, related by a binary relationship, i.e., a property, into an RDF 
@@ -24,6 +28,8 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
  */
 public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
 {
+	private RdfValueGenerator<PT> rdfValueGenerator = null; 
+	
 	protected Logger log = LoggerFactory.getLogger ( this.getClass () );
 
 	public PropertyRdfMapper ()
@@ -34,7 +40,10 @@ public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
 	/**
 	 * (source, propValue) are intended to be an element of a binary relation R. This method defines how such object
 	 * pair spawns an RDF statement (or more than one). The default version just checks that propValue != null, return
-	 * false if it is.
+	 * false if it is. The final RDF target value gathered from propValue should be generated taking into account 
+	 * {@link #getRdfValueGenerator()}.
+	 * 
+	 * @see ObjRdfMapper#map(Object, Map) for further information about params and return value.
 	 * 
 	 */
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
@@ -50,4 +59,22 @@ public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
 	public final boolean map ( T source, PT propValue ) {
 		return map ( source, propValue, null );
 	}
+
+	/**
+	 * When it's not null, this should be used to generate the object value (i.e., a literal, or a URI) in the target RDF 
+	 * statement that maps a Java object value, provided by the JavaBean property that this mapper deals with.
+	 *  
+	 * If this is null, {@link #map(Object, Object, Map)} should default to something else (e.g., ask the 
+	 * {@link RdfMapperFactory} to give a {@link RdfUriGenerator} for the property target). 
+	 */
+	public RdfValueGenerator<PT> getRdfValueGenerator ()
+	{
+		return rdfValueGenerator;
+	}
+
+	public void setRdfValueGenerator ( RdfValueGenerator<PT> rdfValueGenerator )
+	{
+		this.rdfValueGenerator = rdfValueGenerator;
+	}
+
 }

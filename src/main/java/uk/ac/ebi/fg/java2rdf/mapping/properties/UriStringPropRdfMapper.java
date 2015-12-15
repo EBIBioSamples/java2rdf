@@ -9,11 +9,13 @@ import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
 import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
- * Maps a Java String property that is assumed to contain an URI onto an RDF statement based on a property
- * like rdfs:seeAlso or even an object property. 
+ * Maps a Java String property, which is assumed to contain an URI (or part of it), onto an RDF statement based on a 
+ * property like rdfs:seeAlso or even an object property. 
  *
  * <dl><dt>date</dt><dd>23 Oct 2013</dd></dl>
  * @author Marco Brandizi
@@ -39,6 +41,24 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 		this ( targetPropertyUri, false );
 	}
 
+	
+	
+	/**
+	 * If it's true, maps {@link #getTargetPropertyUri()} as an OWL object property, else it assumes it is an 
+	 * annotation property (such as rdfs:seeAlso).
+	 */
+	public boolean isObjectProperty ()
+	{
+		return isObjectProperty;
+	}
+
+	public void setObjectProperty ( boolean isObjectProperty )
+	{
+		this.isObjectProperty = isObjectProperty;
+	}
+
+	
+	
 	
 	/**
 	 * <p>Generates the RDF triple 
@@ -70,14 +90,17 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 			String subjUri = mapFactory.getUri ( source, params );
 			if ( subjUri == null ) return false;
 
-			URI objUri = new URI ( propValue );
+			RdfUriGenerator<String> uriGenerator = this.getRdfUriGenerator ();
+			String objUri = uriGenerator != null 
+				? uriGenerator.getUri ( propValue ) 
+				: new URI ( propValue ).toASCIIString ();
 			
 			if ( isObjectProperty )
 				OwlApiUtils.assertLink ( this.getMapperFactory ().getKnowledgeBase (), 
-					subjUri, this.getTargetPropertyUri (), objUri.toASCIIString () );
+					subjUri, this.getTargetPropertyUri (), objUri );
 			else
 				OwlApiUtils.assertAnnotationLink ( this.getMapperFactory ().getKnowledgeBase (), 
-					subjUri, this.getTargetPropertyUri (), objUri.toASCIIString () );
+					subjUri, this.getTargetPropertyUri (), objUri );
 			
 			return true;
 		} 
@@ -103,18 +126,34 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 			), ex );
 		}
 	}
-
+	
+	
 	/**
-	 * If it's true, maps {@link #getTargetPropertyUri()} as an OWL object property, else it assumes it is an 
-	 * annotation property (such as rdfs:seeAlso).
+	 * This generates the URI value out of the target value of the JavaBean property that this mapper deals with.
+	 * If null, simply turns the Java value onto a URI.
+	 * 
+	 * This is a convenience wrapper of {@link #getRdfValueGenerator()}
 	 */
-	public boolean isObjectProperty ()
-	{
-		return isObjectProperty;
+	public RdfUriGenerator<String> getRdfUriGenerator () {
+		return (RdfUriGenerator<String>) this.getRdfValueGenerator ();
 	}
 
-	public void setObjectProperty ( boolean isObjectProperty )
-	{
-		this.isObjectProperty = isObjectProperty;
+	public void setRdfUriGenerator ( RdfUriGenerator<String> rdfUriGenerator ) {
+		this.setRdfValueGenerator ( rdfUriGenerator );
 	}
+
+	
+	/** 
+	 * Forces the type to be a {@link RdfUriGenerator}.
+	 */
+	@Override
+	public void setRdfValueGenerator ( RdfValueGenerator<String> rdfValueGenerator )
+	{
+		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfUriGenerator ) ) 
+			throw new IllegalArgumentException ( 
+				"setRdfValueGenerator() must get a type of type RdfUriGenerator for " + this.getClass ().getSimpleName () + 
+				", refusing the type " + rdfValueGenerator.getClass ().getName ()
+		); 
+		super.setRdfValueGenerator ( rdfValueGenerator );
+	}	
 }
