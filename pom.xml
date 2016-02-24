@@ -10,10 +10,21 @@
   <name>A library to map JavaBeans onto RDF/OWL classes</name>
   <url>http://github.com/marco-brandizi/java2rdf</url>
 
+	<scm>
+		<developerConnection>scm:git:git@github.com:EBIBioSamples/java2rdf.git</developerConnection>
+	</scm>	
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <owlapi.version>3.5.2</owlapi.version>
   </properties>
+
+	<parent>
+	  <groupId>uk.ac.ebi.fg.biosd</groupId>
+	  <artifactId>biosd_deploy</artifactId>
+	  <version>1.0-SNAPSHOT</version>
+	</parent>
+
 
   <dependencies>
   
@@ -81,6 +92,36 @@
 			<version>2.4</version>
 		</dependency>
 
+		<!-- 
+		  Jena is used by SparqlBasedTester, a utility to verify the existence of certain statements in a RDF file,
+			using SPARQL. For the moment this is living together with OWL-API, we plan to make the triple store to use with
+			java2rdf configurable and the dependency pluggable. 
+		-->
+		<dependency>
+	    <groupId>org.apache.jena</groupId>
+	    <artifactId>apache-jena-libs</artifactId>
+	    <version>3.0.1</version>
+	    <type>pom</type>
+	    <exclusions>
+	    	<!-- We use our own logger (see above) -->
+	    	<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+	    	</exclusion>
+	    	<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+	    	</exclusion>
+	    </exclusions>
+		</dependency>
+		
+		<!-- Used by Jena, but we need a more up-to-date version -->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>		
+
 		
 		<!-- TEST -->
   
@@ -88,7 +129,6 @@
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <version>4.10</version>
-	    <scope>test</scope>
 	  </dependency>
 
 
@@ -157,26 +197,22 @@
 		
   <distributionManagement>
 
-	  <repository>
-		  <id>ebi-repo-old</id>
-		  <name>EBI Repository</name>
-		  <url>scp://ebi-001.ebi.ac.uk/homes/maven/public_html/m2repo</url>
-	  </repository>
-		
-	  <snapshotRepository>
-		  <uniqueVersion>false</uniqueVersion>
-		  <id>ebi-repo-old-snapshots</id>
-		  <name>EBI Snapshots Repository</name>
-		  <url>scp://ebi-001.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
-	  </snapshotRepository>
 	
 	
   </distributionManagement>	
 	
 	
   <repositories>
+
+		<repository>
+	    <id>EBIBioSamples-GH-repo</id>
+	    <url>https://raw.githubusercontent.com/EBIBioSamples/EBIBioSamples.github.io/maven-repo</url>
+	    <snapshots>
+        <enabled>true</enabled>
+	    </snapshots>
+    </repository>
   
-  	<repository>
+  	<!-- repository>
 			<id>ebi-repo</id>
 			<name>EBI repo</name>
 			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
@@ -187,7 +223,7 @@
 			<name>EBI repo</name>
 			<url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
 			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
+		</repository -->
 		
   	<!-- OWL-API -->
   	<repository>

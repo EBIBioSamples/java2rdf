@@ -7,6 +7,8 @@ package uk.ac.ebi.fg.java2rdf.mapping;
  * This root class is the bare minimum that is expected from each mapper, essentially, a mapper keeps a pointer to the {@link RdfMapperFactory}
  * that uses it.
  *
+ * <T> is the java type (a JavaBean) that the class is intended to map.
+ *
  * <dl><dt>date</dt><dd>Mar 23, 2013</dd></dl>
  * @author Marco Brandizi
  *
