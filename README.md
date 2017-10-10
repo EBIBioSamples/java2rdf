@@ -1,4 +1,4 @@
-#java2rdf
+# java2rdf
 
 A simple library to maps Java objects and Java beans onto RDF/OWL. Contrary to other similar tools, java2rdf is based on declaring mappings between JavaBeans and RDF/OWL entities in dedicated mapping Java classes, so not in configuration files (you don't have to learn yet another XML schema), not via Java annotations (you don't always have access to, or want to spoil the source model).  
 
