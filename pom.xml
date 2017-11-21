@@ -4,7 +4,7 @@
 
   <groupId>uk.ac.ebi.fg</groupId>
   <artifactId>java2rdf</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>A library to map JavaBeans onto RDF/OWL classes</name>
