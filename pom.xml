@@ -190,6 +190,14 @@
         <enabled>true</enabled>
 	    </snapshots>
     </repository>
+
+		<!-- rdfutils -->
+		<repository>
+			<id>marcobrandizi.info</id>
+			<url>http://www.marcobrandizi.info:8081/artifactory/maven</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
   				  	
   </repositories>
 
