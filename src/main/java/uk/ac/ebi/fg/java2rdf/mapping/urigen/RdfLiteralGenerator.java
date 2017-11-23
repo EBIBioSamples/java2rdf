@@ -7,6 +7,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
 
 /**
  * Generates a literal value (a string at the moment) that corresponds to a JavaBean object in a RDF representation.
+ * 
  * For example, you may want to map the instance b of Book, having p.title = 'I, Robot' to 'I, Robot' and use such value for a 
  * {@link OwlDatatypePropRdfMapper data type property mapper} about the OWL property 'dc:title', to be applied 
  * to a {@link BeanRdfMapper} for Person. See examples in the test package for details. Another slightly more complex 
@@ -14,6 +15,8 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
  * 'I, Robot, by Isac Asimov, Penguin Books, ISBN 123'. You will construct such a string inside a {@link RdfLiteralGenerator}.
  * 
  * @See OwlDatatypePropRdfMapper.
+ * 
+ * TODO: Review! We need to be more specific than string-only.
  *
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi

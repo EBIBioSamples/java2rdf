@@ -5,10 +5,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
-import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
  * This maps a pair of Java objects by means of some OWL object type property. For instance, you may use this mapper
@@ -61,8 +61,12 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 			
 			if ( objUri == null ) return false;
 			
-			OwlApiUtils.assertLink ( mapFactory.getKnowledgeBase (), 
-				subjUri, this.getTargetPropertyUri (), objUri );
+			CommonsRDFUtils.COMMUTILS.assertResource ( 
+				mapFactory.getGraphModel (), 
+				subjUri,
+				this.getTargetPropertyUri (), 
+				objUri
+			);
 
 			// Don't use targetMapper directly, we need to trace this visit.
 			return mapFactory.map ( propValue, params );

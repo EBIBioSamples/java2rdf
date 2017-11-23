@@ -1,6 +1,6 @@
 package uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping;
 
-import static uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils.uri;
+import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
 
 import java.util.Map;
 
@@ -29,29 +29,29 @@ public class ArticleMapper extends BeanRdfMapper<Article>
 		this.setRdfUriGenerator ( new RdfUriGenerator<Article> () {
 			@Override
 			public String getUri ( Article source, Map<String, Object> params ) {
-				return uri ( "ex", "article/" + source.getId () );
+				return iri ( "ex:article/" + source.getId () );
 			}
 		});
 		
 		// How they are mapped to a RDFS/OWL class
-		this.setRdfClassUri ( uri ( "foaf", "Document" ) );
+		this.setRdfClassUri ( iri ( "foaf", "Document" ) );
 		
 		// How to map primitive Java type to OWL datatype properties (or RDF-S) ( maps String getTitle () ) 
-		this.addPropertyMapper ( "title", new OwlDatatypePropRdfMapper<Article, String> ( uri ( "dc-terms", "title" ) ) );
+		this.addPropertyMapper ( "title", new OwlDatatypePropRdfMapper<Article, String> ( iri ( "dcterms", "title" ) ) );
 
 		// How to map resource links ( maps Person getEditor() )
-		this.addPropertyMapper ( "editor", new OwlObjPropRdfMapper<Article, Person> ( uri ( "dc-terms", "publisher" )) );
+		this.addPropertyMapper ( "editor", new OwlObjPropRdfMapper<Article, Person> ( iri ( "dcterms", "publisher" )) );
 
 		// How to map collection properties ( maps Set<Person> getAuthors () )
 		this.addPropertyMapper ( "authors", new CollectionPropRdfMapper<Article, Person> ( 
-			new OwlObjPropRdfMapper<Article, Person> ( uri ( "dc-terms", "creator" ) ) 
+			new OwlObjPropRdfMapper<Article, Person> ( iri ( "dcterms", "creator" ) ) 
 		));
 		
 		// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 		// ( maps String getAbstractText() ) 
 		this.addPropertyMapper ( "abstractText", new CompositePropRdfMapper<> (
-			new OwlDatatypePropRdfMapper<Article, String> ( uri ( "dc-terms:abstract" ) ),
-			new OwlDatatypePropRdfMapper<Article, String> ( uri ( "rdfs:comment" ) ) 
+			new OwlDatatypePropRdfMapper<Article, String> ( iri ( "dcterms:abstract" ) ),
+			new OwlDatatypePropRdfMapper<Article, String> ( iri ( "rdfs:comment" ) ) 
 		));
 	}
 }

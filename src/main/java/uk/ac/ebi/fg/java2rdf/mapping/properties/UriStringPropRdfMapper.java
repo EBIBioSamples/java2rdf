@@ -1,5 +1,7 @@
 package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
+import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -7,11 +9,11 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
-import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
  * Maps a Java String property, which is assumed to contain an URI (or part of it), onto an RDF statement based on a 
@@ -46,6 +48,11 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 	/**
 	 * If it's true, maps {@link #getTargetPropertyUri()} as an OWL object property, else it assumes it is an 
 	 * annotation property (such as rdfs:seeAlso).
+	 * 
+	 * @deprecated This was used with the OWL-API. Now statements are asserted through  
+	 * {@link CommonsRDFUtils#COMMUTILS} and it makes no difference if they're annotation or object properties.
+	 * This will be removed soon.
+	 * 
 	 */
 	public boolean isObjectProperty ()
 	{
@@ -67,10 +74,6 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 	 *   
 	 * <p>If propValue cannot be resolved to a proper URI, doesn't spawn anything and 
 	 * logs an error (but doesn't throw any exception).</p>
-	 * 
-	 * <p>Will use {@link OwlApiUtils#assertAnnotationLink(org.semanticweb.owlapi.model.OWLOntology, String, String, String)}
-	 * or {@link OwlApiUtils#assertLink(org.semanticweb.owlapi.model.OWLOntology, String, String, String)}, depending on
-	 * {@link #isObjectProperty()}.</p>
 	 * 
 	 */
 	@Override
@@ -95,23 +98,18 @@ public class UriStringPropRdfMapper<T> extends UriProvidedPropertyRdfMapper<T, S
 				? uriGenerator.getUri ( propValue ) 
 				: new URI ( propValue ).toASCIIString ();
 			
-			if ( isObjectProperty )
-				OwlApiUtils.assertLink ( this.getMapperFactory ().getKnowledgeBase (), 
-					subjUri, this.getTargetPropertyUri (), objUri );
-			else
-				OwlApiUtils.assertAnnotationLink ( this.getMapperFactory ().getKnowledgeBase (), 
-					subjUri, this.getTargetPropertyUri (), objUri );
+			COMMUTILS.assertResource ( this.getMapperFactory ().getGraphModel (), subjUri, this.getTargetPropertyUri (), objUri );
 			
 			return true;
 		} 
 		catch ( URISyntaxException ex )
 		{
-			log.error ( "Ignoring bad URI while doing RDF mapping <{}[{}] '{}' [{}]", new String[] {
+			log.error ( "Ignoring bad URI while doing RDF mapping <{}[{}] '{}' [{}]",
 				source.getClass ().getSimpleName (), 
 				StringUtils.abbreviate ( source.toString (), 50 ), 
 				this.getTargetPropertyUri (),
 				StringUtils.abbreviate ( propValue.toString (), 50 ) 
-			});
+			);
 			return false;
 		}
 		catch ( Exception ex )

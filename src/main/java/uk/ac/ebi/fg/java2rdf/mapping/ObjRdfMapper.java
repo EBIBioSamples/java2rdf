@@ -13,7 +13,7 @@ import java.util.Map;
 public abstract class ObjRdfMapper<T> extends RdfMapper<T>
 {
 	/**
-	 * Does the mapping. This is expected to generate RDF triples into {@link #getKnowledgeBase()}. 
+	 * Does the mapping. This is expected to generate RDF triples into {@link #getGraphModel()}. 
 	 * 
 	 * Avoid to call this method directly, use {@link RdfMapperFactory#map(Object, Map)} instead. This will trace the
 	 * objects that are already mapped.

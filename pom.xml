@@ -17,12 +17,16 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <owlapi.version>3.5.2</owlapi.version>
+		<commonsrdf.version>0.3.0-incubating</commonsrdf.version>
+    <jena.version>3.5.0</jena.version>
+    <rdfutils.version>2.0-SNAPSHOT</rdfutils.version>
+    <slf4j.version>1.7.5</slf4j.version>
   </properties>
 
 	<parent>
 	  <groupId>uk.ac.ebi.fg.biosd</groupId>
 	  <artifactId>biosd_deploy</artifactId>
-	  <version>1.0-SNAPSHOT</version>
+	  <version>1.0.1-SNAPSHOT</version>
 	</parent>
 
 
@@ -32,52 +36,47 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.6</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 
-		<!-- Use Logback as concrete logger -->
+		<!-- Use Logback as concrete logger for testing -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>0.9.29</version>
+			<scope>test</scope>
 		</dependency>
-
-		<!-- Intercepts log4j and sends it to SL4J -->		
+		
+		<!--  Same for commons-logging -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.6.6</version>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
+		
   		
 		<dependency>
 		  <groupId>uk.ac.ebi</groupId>
 		  <artifactId>jutils</artifactId>
-			<version>5.1-SNAPSHOT</version>
+			<version>6.0.1-SNAPSHOT</version>
 		</dependency>
 	
 		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-api</artifactId>		
-			<version>${owlapi.version}</version>
+		  <groupId>info.marcobrandizi</groupId>
+			<artifactId>rdfutils-commonsrdf</artifactId>
+	  		<version>${rdfutils.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-apibinding</artifactId>		
-			<version>${owlapi.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>hermit</groupId>
-			<artifactId>hermit</artifactId>
-			<version>1.3.4</version>
-			<type>jar</type>
-		</dependency>
-  
+	
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.8.3</version>
+			<version>1.9.3</version>
+			<exclusions>
+					<exclusion>
+							<groupId>commons-logging</groupId>
+							<artifactId>commons-logging</artifactId>
+					</exclusion>
+			</exclusions>
 		</dependency>  
 
 		<dependency>
@@ -92,45 +91,41 @@
 			<version>2.4</version>
 		</dependency>
 
-		<!-- 
-		  Jena is used by SparqlBasedTester, a utility to verify the existence of certain statements in a RDF file,
-			using SPARQL. For the moment this is living together with OWL-API, we plan to make the triple store to use with
-			java2rdf configurable and the dependency pluggable. 
-		-->
-		<dependency>
-	    <groupId>org.apache.jena</groupId>
-	    <artifactId>apache-jena-libs</artifactId>
-	    <version>3.0.1</version>
-	    <type>pom</type>
-	    <exclusions>
-	    	<!-- We use our own logger (see above) -->
-	    	<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-	    	</exclusion>
-	    	<exclusion>
-					<groupId>xml-apis</groupId>
-					<artifactId>xml-apis</artifactId>
-	    	</exclusion>
-	    </exclusions>
-		</dependency>
-		
-		<!-- Used by Jena, but we need a more up-to-date version -->
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
-		</dependency>		
-
 		
 		<!-- TEST -->
-  
-	  <dependency>
-	    <groupId>junit</groupId>
-	    <artifactId>junit</artifactId>
-	    <version>4.10</version>
-	  </dependency>
+ 	  
+		<dependency>
+		  <groupId>org.apache.commons</groupId>
+		  <artifactId>commons-rdf-jena</artifactId>
+		  <version>${commonsrdf.version}</version>
+		  <scope>test</scope>
+		  <exclusions>
+				<exclusion>
+					<groupId>org.apache.jena</groupId>
+					<artifactId>jena-osgi</artifactId>
+				</exclusion>		  
+		  </exclusions>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.jena</groupId>
+		  <artifactId>apache-jena-libs</artifactId>
+		  <type>pom</type>
+		  <scope>test</scope>
+			<version>${jena.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-osgi</artifactId>
+		  <scope>test</scope>
+			<version>${jena.version}</version>		  
+		</dependency>	  
 
+		<dependency>
+		  <groupId>info.marcobrandizi</groupId>
+			<artifactId>rdfutils-jena</artifactId>
+	  		<version>${rdfutils.version}</version>
+	  		<scope>test</scope>
+		</dependency>
 
   </dependencies>
 
@@ -143,8 +138,8 @@
       <plugin>
 	      <artifactId>maven-compiler-plugin</artifactId>
 	      <configuration>
-	        <source>1.7</source>
-	        <target>1.7</target>
+	        <source>1.8</source>
+	        <target>1.8</target>
 	        <encoding>UTF-8</encoding>
 	      </configuration>
 	    </plugin>
@@ -183,24 +178,8 @@
 	      <filtering>true</filtering>
 	    </testResource>
     </testResources>
-
-		<extensions>
-			<!-- Needed for scp-based deployment -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>2.2</version>
-			</extension>
-		</extensions>
 			
 	</build>
-		
-  <distributionManagement>
-
-	
-	
-  </distributionManagement>	
-	
 	
   <repositories>
 
@@ -211,31 +190,7 @@
         <enabled>true</enabled>
 	    </snapshots>
     </repository>
-  
-  	<!-- repository>
-			<id>ebi-repo</id>
-			<name>EBI repo</name>
-			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
-		</repository>
-		
-		<repository>
-			<id>ebi-repo-snapshots</id>
-			<name>EBI repo</name>
-			<url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</repository -->
-		
-  	<!-- OWL-API -->
-  	<repository>
-			<id>sonatype</id>
-			<url>http://oss.sonatype.org/content/groups/public</url>
-			<snapshots><enabled>true</enabled></snapshots>
-			<releases><enabled>true</enabled></releases>  	
-  	</repository>
-				  	
+  				  	
   </repositories>
-
-	<profiles>
-	</profiles>		
 
 </project>

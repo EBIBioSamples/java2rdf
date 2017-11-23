@@ -1,5 +1,7 @@
 package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
+import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
+
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +11,6 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfLiteralGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
-import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
  * This maps a pair of Java objects by means of some OWL data type property. For instance, you may use this mapper
@@ -62,8 +63,12 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 			String targetRdfVal = targetValGen.getValue ( propValue, params );
 			if ( targetRdfVal == null ) return false;
 			
-			OwlApiUtils.assertData ( this.getMapperFactory ().getKnowledgeBase (), 
-				subjUri, this.getTargetPropertyUri (), targetRdfVal );
+			COMMUTILS.assertLiteral ( 
+				this.getMapperFactory ().getGraphModel (), 
+				subjUri, 
+				this.getTargetPropertyUri (),
+				targetRdfVal
+			);
 			
 			return true;
 		} 

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.apache.commons.rdf.api.Graph;
 
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 
@@ -32,15 +32,15 @@ import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
 @SuppressWarnings ( { "rawtypes", "unchecked" } )
 public class RdfMapperFactory
 {
-	private OWLOntology knowledgeBase;
+	private Graph graphModel;
 	private Map<Class, ObjRdfMapper> mappers;
 	private Set visitedObjects = Collections.synchronizedSet ( new HashSet<> () );
 	
 	public RdfMapperFactory () {
 	}
 	
-	public RdfMapperFactory ( OWLOntology knowledgeBase ) {
-		this.knowledgeBase = knowledgeBase;
+	public RdfMapperFactory ( Graph graphModel ) {
+		this.graphModel = graphModel;
 	}
 	
 
@@ -95,18 +95,18 @@ public class RdfMapperFactory
 		this.mappers = mappers;
 	}
 	
-	/** This is where the mappings are stored */
-	public OWLOntology getKnowledgeBase () {
-		return knowledgeBase;
+	/** This is where the mapping output goes */
+	public Graph getGraphModel () {
+		return graphModel;
 	}
 
 	/**
 	 * In case it is really new, {@link #reset()} is invoked. 
 	 */
-	public void setKnowledgeBase ( OWLOntology knowledgeBase ) 
+	public void setGraphModel ( Graph graphModel ) 
 	{
-		if ( this.knowledgeBase == knowledgeBase ) return;
-		this.knowledgeBase = knowledgeBase;
+		if ( this.graphModel == graphModel ) return;
+		this.graphModel = graphModel;
 		this.reset ();
 	}
 

@@ -1,12 +1,12 @@
 package uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping;
 
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.apache.commons.rdf.api.Graph;
 
+import info.marcobrandizi.rdfutils.namespaces.NamespaceUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.FoafMappingTest;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.model.Article;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.model.Person;
-import uk.ac.ebi.fg.java2rdf.utils.NamespaceUtils;
 
 /**
  * This is where you put all the mappers you need together and where you invoke the mapping operations against your
@@ -27,9 +27,9 @@ public class FoafMapperFactory extends RdfMapperFactory
 		NamespaceUtils.registerNs ( "foaf",		"http://xmlns.com/foaf/0.1/" );
 	}
 	
-	public FoafMapperFactory ( OWLOntology knowledgeBase )
+	public FoafMapperFactory ( Graph graph )
 	{
-		super ( knowledgeBase );
+		super ( graph );
 		this.setMapper ( Article.class, new ArticleMapper () );
 		this.setMapper ( Person.class, new PersonMapper () );
 	}

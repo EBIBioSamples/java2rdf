@@ -1,6 +1,9 @@
 package uk.ac.ebi.fg.java2rdf.mapping;
 
 
+import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
+import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.BeanPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.PropertyRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
-import uk.ac.ebi.fg.java2rdf.utils.OwlApiUtils;
 
 /**
  * Maps a JavaBean object and its getter-reacheable properties onto a set of RDF statements.  
@@ -77,8 +79,8 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 			
 			// Generates and rdf:type statement
 			String targetRdfClassUri = getTargetRdfClassUri ();
-			if ( targetRdfClassUri != null ) OwlApiUtils.assertIndividual ( 
-				mapFactory.getKnowledgeBase (), uri, targetRdfClassUri 
+			if ( targetRdfClassUri != null ) COMMUTILS.assertResource ( 
+				mapFactory.getGraphModel (), uri, iri ( "rdf:type" ), targetRdfClassUri 
 			);
 			// TODO: else WARN
 			return true;
