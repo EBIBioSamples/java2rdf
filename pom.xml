@@ -7,7 +7,11 @@
   <version>2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>A library to map JavaBeans onto RDF/OWL classes</name>
+  <name>java2rdf library</name>
+  <description>
+  		java2rdf is a library to map JavaBeans onto RDF/OWL classes, based on declarations that map JavaBeans on
+  		subject-centric RDF graphs.
+	</description>
   <url>http://github.com/marco-brandizi/java2rdf</url>
 
 	<scm>

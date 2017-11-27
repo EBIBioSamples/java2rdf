@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.ObjRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
 /**
  * A generic mapper that maps a Java object pair, related by a binary relationship, i.e., a property, into an RDF 
@@ -25,10 +25,12 @@ import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
  *
  * @param <T> the type of the Java object that plays the role of subject in the mapping worked out by this mapper.
  * @param <PT> the type of the Java object that plays the role of object in the mapping worked out by this mapper.
+ * @param <RV> the type of RDF entity that this mapper generates for values of PT. This is used for 
+ * 
  */
-public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
+public abstract class PropertyRdfMapper<T, PT, RV> extends RdfMapper<T>
 {
-	private RdfValueGenerator<PT> rdfValueGenerator = null; 
+	private RdfValueGenerator<PT, RV> rdfValueGenerator = null; 
 	
 	protected Logger log = LoggerFactory.getLogger ( this.getClass () );
 
@@ -65,16 +67,22 @@ public abstract class PropertyRdfMapper<T, PT> extends RdfMapper<T>
 	 * statement that maps a Java object value, provided by the JavaBean property that this mapper deals with.
 	 *  
 	 * If this is null, {@link #map(Object, Object, Map)} should default to something else (e.g., ask the 
-	 * {@link RdfMapperFactory} to give a {@link RdfUriGenerator} for the property target). 
+	 * {@link RdfMapperFactory} to give a {@link RdfValueGenerator} for the property target). 
 	 */
-	public RdfValueGenerator<PT> getRdfValueGenerator ()
+	public RdfValueGenerator<PT,RV> getRdfValueGenerator ()
 	{
 		return rdfValueGenerator;
 	}
 
-	public void setRdfValueGenerator ( RdfValueGenerator<PT> rdfValueGenerator )
+	public void setRdfValueGenerator ( RdfValueGenerator<PT,RV> rdfValueGenerator )
 	{
 		this.rdfValueGenerator = rdfValueGenerator;
 	}
 
+	@Override
+	public void setMapperFactory ( RdfMapperFactory mapperFactory )
+	{
+		super.setMapperFactory ( mapperFactory );
+		if ( this.rdfValueGenerator != null ) 		this.rdfValueGenerator.setMapperFactory ( this.getMapperFactory () );
+	}
 }

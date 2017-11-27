@@ -15,15 +15,15 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
  * @author Marco Brandizi
  *
  */
-public class InversePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
+public class InversePropRdfMapper<T, PT, RV> extends PropertyRdfMapper<T, PT, RV>
 {
-	private PropertyRdfMapper<PT, T> inversePropMapper;
+	private PropertyRdfMapper<PT, T, RV> inversePropMapper;
 	
 	public InversePropRdfMapper () {
 		this ( null );
 	}
 	
-	public InversePropRdfMapper ( PropertyRdfMapper<PT, T> inversePropMapper )
+	public InversePropRdfMapper ( PropertyRdfMapper<PT, T, RV> inversePropMapper )
 	{
 		super ();
 		this.setInversePropMapper ( inversePropMapper );
@@ -34,7 +34,7 @@ public class InversePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	 * normally used by {@link PropertyRdfMapper}.
 	 * 
 	 * For instance, if you have an {@link InversePropRdfMapper InversePropRdfMapper&lt;CCard, Customer&gt;} with
-	 * {@link #getInversePropMapper()} = OwlObjPropRdfMapper&lt;Customer, CCard&gt; ( "customer", "ex:has-cc" ), 
+	 * {@link #getInversePropMapper()} = ResourcePropRdfMapper&lt;Customer, CCard&gt; ( "customer", "ex:has-cc" ), 
 	 * this method will create statements of type (customer1, has-cc, cc1), by invoking the java getter CCard.getCustomer().
 	 *   
 	 */
@@ -54,12 +54,12 @@ public class InversePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	/**
 	 * This is the base (direct) property that this mapper works with by considering its inverse. 
 	 */
-	public PropertyRdfMapper<PT, T> getInversePropMapper ()
+	public PropertyRdfMapper<PT, T, RV> getInversePropMapper ()
 	{
 		return inversePropMapper;
 	}
 
-	public void setInversePropMapper ( PropertyRdfMapper<PT, T> inversePropMapper )
+	public void setInversePropMapper ( PropertyRdfMapper<PT, T, RV> inversePropMapper )
 	{
 		this.inversePropMapper = inversePropMapper;
 	}

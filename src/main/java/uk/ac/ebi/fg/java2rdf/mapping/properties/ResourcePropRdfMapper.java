@@ -4,14 +4,19 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.rdf.api.Literal;
 
 import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfLiteralGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
 /**
- * This maps a pair of Java objects by means of some OWL object type property. For instance, you may use this mapper
+ * This maps a pair of Java objects to a statement between resources.
+ * 
+ * For instance, you may use this mapper
  * to map Book.getAuthor() via ex:has-author. Both the subject and object URI for the mapped RDF statement
  * (i.e., the book  and author's URIs) are taken from {@link RdfMapperFactory#getUri(Object, Map)}.
  * 
@@ -19,13 +24,13 @@ import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
  * @author Marco Brandizi
  *
  */
-public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT>
+public class ResourcePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT, String>
 {
-	public OwlObjPropRdfMapper ()  {
+	public ResourcePropRdfMapper ()  {
 		super ();
 	}
 
-	public OwlObjPropRdfMapper ( String targetPropertyUri ) {
+	public ResourcePropRdfMapper ( String targetPropertyUri ) {
 		super ( targetPropertyUri );
 	}
 	
@@ -54,9 +59,9 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 
 			// Gets the URI for the property target. This either uses the associated property generator, or it asks the 
 			// factory to use the URI generator that is associated to the Java type the property target is instance of
-			RdfValueGenerator<PT> objValGenerator = this.getRdfValueGenerator ();
-			String objUri = objValGenerator != null 
-				? objValGenerator.getValue ( propValue, params ) 
+			RdfUriGenerator<PT> valUriGenerator = this.getUriGenerator ();
+			String objUri = valUriGenerator != null 
+				? valUriGenerator.getUri ( propValue, params ) 
 				: mapFactory.getUri ( propValue, params );
 			
 			if ( objUri == null ) return false;
@@ -83,4 +88,33 @@ public class OwlObjPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, 
 			), ex );
 		}
 	}
+	
+	/**
+	 * This generates the URIs for the property values that this property mapper targets.  
+	 * 
+	 * This is a convenience wrapper of {@link #getRdfValueGenerator()}
+	 */
+	public RdfUriGenerator<PT> getUriGenerator () {
+		return (RdfUriGenerator<PT>) this.getRdfValueGenerator ();
+	}
+
+	public void setUriGenerator ( RdfUriGenerator<PT> uriGenerator ) {
+		this.setRdfValueGenerator ( uriGenerator );
+	}
+
+	
+	/** 
+	 * Forces the type to be a {@link RdfUriGenerator}.
+	 */
+	@Override
+	public void setRdfValueGenerator ( RdfValueGenerator<PT, String> rdfValueGenerator )
+	{
+		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfUriGenerator ) ) 
+			throw new IllegalArgumentException ( 
+				"setRdfValueGenerator() must get a type of type RdfValueGenerator for " + this.getClass ().getSimpleName () + 
+				", refusing the type " + rdfValueGenerator.getClass ().getName ()
+		); 
+		super.setRdfValueGenerator ( rdfValueGenerator );
+	}
+	
 }

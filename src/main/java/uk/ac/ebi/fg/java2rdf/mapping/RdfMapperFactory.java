@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.rdf.api.Graph;
 
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
  * <p>This is to be used to configure the mappers needed for mapping a specific Java object model to RDF. You're expected to
@@ -63,7 +63,18 @@ public class RdfMapperFactory
 		Validate.notNull ( clazz, "Internal error: cannot map a null class" );
 		Validate.notNull ( mappers, "Internal error: Please initialise the Java2RDF framework with a set of mappers, "
 			+ "before requesting a mapper for '%s'", clazz.getSimpleName () );
-		return mappers.get ( clazz );
+				
+		ObjRdfMapper<T> result = mappers.get ( clazz );
+		if ( result != null ) return result;
+		
+		// else,try with the superclasses/interfaces, so that one can map an higher level to a more specific implementation
+		Class<T> sup = (Class<T>) clazz.getSuperclass ();
+		if ( sup != null && ( result = getMapper ( sup ) )!= null ) return result;
+		
+		for ( Class<?> ifc: clazz.getInterfaces () ) 
+			if ( ( result = getMapper (  (Class<T>) ifc ) )!= null ) return result;
+
+		return null;
 	}
 
 	/**
@@ -144,7 +155,10 @@ public class RdfMapperFactory
 			"Internal error: the mapper '" + mapper.getClass ().getSimpleName () + "' is not a BeanRdfMapper and I cannot get "
 			+ "a URI generator from it" 
 		);
-		return ((BeanRdfMapper) mapper).getRdfUriGenerator ();
+		RdfUriGenerator<T> result = ((BeanRdfMapper) mapper).getRdfUriGenerator ();
+		if ( result.getMapperFactory () == null ) result.setMapperFactory ( this );
+		
+		return result;
 	} 
 	
 	/**

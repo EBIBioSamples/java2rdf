@@ -1,4 +1,4 @@
-package uk.ac.ebi.fg.java2rdf.mapping.urigen;
+package uk.ac.ebi.fg.java2rdf.mapping.rdfgen;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Marco Brandizi
  *
  */
-public abstract class RdfUriGenerator<T> extends RdfValueGenerator<T>
+public abstract class RdfUriGenerator<T> extends RdfValueGenerator<T, String>
 {
 	/** It invokes {@link #getUri(Object)}, redefine that. */
 	@Override

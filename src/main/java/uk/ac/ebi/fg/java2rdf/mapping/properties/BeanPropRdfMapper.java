@@ -17,17 +17,17 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
  * @author Marco Brandizi
  *
  */
-public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
+public class BeanPropRdfMapper<T, PT, RV> extends ObjRdfMapper<T>
 {
 	private String sourcePropertyName = null;
-	private PropertyRdfMapper<T, PT> propertyMapper = null;
+	private PropertyRdfMapper<T, PT, RV> propertyMapper = null;
 	
 	
 	public BeanPropRdfMapper () {
 		this ( null, null );
 	}
 
-	public BeanPropRdfMapper ( String sourcePropertyName, PropertyRdfMapper<T, PT> propertyMapper )
+	public BeanPropRdfMapper ( String sourcePropertyName, PropertyRdfMapper<T, PT, RV> propertyMapper )
 	{
 		super ();
 		this.setSourcePropertyName ( sourcePropertyName );
@@ -90,12 +90,12 @@ public class BeanPropRdfMapper<T, PT> extends ObjRdfMapper<T>
 	 * to an RDF statement.
 	 * 
 	 */
-	public PropertyRdfMapper<T, PT> getPropertyMapper ()
+	public PropertyRdfMapper<T, PT, RV> getPropertyMapper ()
 	{
 		return propertyMapper;
 	}
 
-	public void setPropertyMapper ( PropertyRdfMapper<T, PT> propertyMapper )
+	public void setPropertyMapper ( PropertyRdfMapper<T, PT, RV> propertyMapper )
 	{
 		this.propertyMapper = propertyMapper;
 	}

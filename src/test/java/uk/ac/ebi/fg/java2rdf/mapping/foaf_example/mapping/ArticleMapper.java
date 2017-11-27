@@ -9,9 +9,9 @@ import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.model.Article;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.model.Person;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CollectionPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CompositePropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlObjPropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.ResourcePropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 
 /**
@@ -37,21 +37,21 @@ public class ArticleMapper extends BeanRdfMapper<Article>
 		this.setRdfClassUri ( iri ( "foaf", "Document" ) );
 		
 		// How to map primitive Java type to OWL datatype properties (or RDF-S) ( maps String getTitle () ) 
-		this.addPropertyMapper ( "title", new OwlDatatypePropRdfMapper<Article, String> ( iri ( "dcterms", "title" ) ) );
+		this.addPropertyMapper ( "title", new LiteralPropRdfMapper<Article, String> ( iri ( "dcterms", "title" ) ) );
 
 		// How to map resource links ( maps Person getEditor() )
-		this.addPropertyMapper ( "editor", new OwlObjPropRdfMapper<Article, Person> ( iri ( "dcterms", "publisher" )) );
+		this.addPropertyMapper ( "editor", new ResourcePropRdfMapper<Article, Person> ( iri ( "dcterms", "publisher" )) );
 
 		// How to map collection properties ( maps Set<Person> getAuthors () )
-		this.addPropertyMapper ( "authors", new CollectionPropRdfMapper<Article, Person> ( 
-			new OwlObjPropRdfMapper<Article, Person> ( iri ( "dcterms", "creator" ) ) 
+		this.addPropertyMapper ( "authors", new CollectionPropRdfMapper<Article, Person, String> ( 
+			new ResourcePropRdfMapper<Article, Person> ( iri ( "dcterms", "creator" ) ) 
 		));
 		
 		// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 		// ( maps String getAbstractText() ) 
 		this.addPropertyMapper ( "abstractText", new CompositePropRdfMapper<> (
-			new OwlDatatypePropRdfMapper<Article, String> ( iri ( "dcterms:abstract" ) ),
-			new OwlDatatypePropRdfMapper<Article, String> ( iri ( "rdfs:comment" ) ) 
+			new LiteralPropRdfMapper<Article, String> ( iri ( "dcterms:abstract" ) ),
+			new LiteralPropRdfMapper<Article, String> ( iri ( "rdfs:comment" ) ) 
 		));
 	}
 }

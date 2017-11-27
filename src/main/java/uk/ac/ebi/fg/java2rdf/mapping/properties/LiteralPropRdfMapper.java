@@ -6,16 +6,18 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.rdf.api.Literal;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfLiteralGenerator;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfLiteralGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
 /**
- * This maps a pair of Java objects by means of some OWL data type property. For instance, you may use this mapper
- * to map Book.getTitle() via dc:title. The RDF literal value for such a mapping (i.e., the book title) is created
- * by means of {@link #getRdfLiteralGenerator()}. 
+ * This maps a pair of Java objects by means of RDF literal values for the target of some property.
+ *  
+ * For instance, you may use this mapper to map Book.getTitle() via dc:title. The RDF literal value for 
+ * such a mapping (i.e., the book title) is created by means of {@link #getLiteralGenerator()}. 
  * 
  * @See {@link RdfLiteralGenerator}.
  * 
@@ -23,26 +25,26 @@ import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfValueGenerator;
  * @author Marco Brandizi
  *
  */
-public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT>
-{	
-	public OwlDatatypePropRdfMapper ()  {
+public class LiteralPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T, PT, Literal>
+{	 
+	public LiteralPropRdfMapper ()  {
 		this ( null, new RdfLiteralGenerator<PT> () );
 	}
 
-	public OwlDatatypePropRdfMapper ( String targetPropertyUri )
+	public LiteralPropRdfMapper ( String targetPropertyUri )
 	{
 		this ( targetPropertyUri, new RdfLiteralGenerator<PT> () );
 	}
 
-	public OwlDatatypePropRdfMapper ( String targetPropertyUri, RdfLiteralGenerator<PT> rdfLiteralGenerator ) 
+	public LiteralPropRdfMapper ( String targetPropertyUri, RdfLiteralGenerator<PT> rdfLiteralGenerator ) 
 	{
 		super ( targetPropertyUri );
-		this.setRdfLiteralGenerator ( rdfLiteralGenerator );
+		this.setLiteralGenerator ( rdfLiteralGenerator );
 	}
 	
 	/**
 	 * This maps (source, propValue) via {@link #getTargetPropertyUri()}. Uses {@link RdfMapperFactory#getUri(Object, Map)}
-	 * to get the URI of source, and {@link #getRdfLiteralGenerator()} to get the literal value for propValue.
+	 * to get the URI of source, and {@link #getLiteralGenerator()} to get the literal value for propValue.
 	 */
 	@Override
 	public boolean map ( T source, PT propValue, Map<String, Object> params )
@@ -57,10 +59,10 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 			String subjUri = mapFactory.getUri ( source, params );
 			if ( subjUri == null ) return false;
 
-			RdfLiteralGenerator<PT> targetValGen = this.getRdfLiteralGenerator ();
+			RdfLiteralGenerator<PT> targetValGen = this.getLiteralGenerator ();
 			Validate.notNull ( mapFactory, "Internal error: cannot map a OWL data property without a literal generator" );
 			
-			String targetRdfVal = targetValGen.getValue ( propValue, params );
+			Literal targetRdfVal = targetValGen.getValue ( propValue, params );
 			if ( targetRdfVal == null ) return false;
 			
 			COMMUTILS.assertLiteral ( 
@@ -86,16 +88,16 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 	}
 
 	/**
-	 * This generates the literal value (a plain string at the moment) to be used to map an object which is the value
-	 * of a JavaBean property into a string representation of such value.
+	 * This generates the literal value to be used to map the value of an object property to RDF.
+	 * By default, it uses {@link RdfLiteralGenerator}, which maps most common Java types to XSD types.
 	 * 
 	 * This is a convenience wrapper of {@link #getRdfValueGenerator()}
 	 */
-	public RdfLiteralGenerator<PT> getRdfLiteralGenerator () {
+	public RdfLiteralGenerator<PT> getLiteralGenerator () {
 		return (RdfLiteralGenerator<PT>) this.getRdfValueGenerator ();
 	}
 
-	public void setRdfLiteralGenerator ( RdfLiteralGenerator<PT> rdfLiteralGenerator ) {
+	public void setLiteralGenerator ( RdfLiteralGenerator<PT> rdfLiteralGenerator ) {
 		this.setRdfValueGenerator ( rdfLiteralGenerator );
 	}
 
@@ -104,7 +106,7 @@ public class OwlDatatypePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMappe
 	 * Forces the type to be a {@link RdfLiteralGenerator}.
 	 */
 	@Override
-	public void setRdfValueGenerator ( RdfValueGenerator<PT> rdfValueGenerator )
+	public void setRdfValueGenerator ( RdfValueGenerator<PT, Literal> rdfValueGenerator )
 	{
 		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfLiteralGenerator ) ) 
 			throw new IllegalArgumentException ( 

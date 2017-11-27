@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.Literal;
 import org.apache.commons.rdf.api.RDFTerm;
 import org.apache.commons.rdf.api.Triple;
 import org.apache.commons.rdf.jena.JenaGraph;
@@ -28,9 +29,9 @@ import info.marcobrandizi.rdfutils.namespaces.NamespaceUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CollectionPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CompositePropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.InversePropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlObjPropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.ResourcePropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
  * Tests and examples of basic usage. 
@@ -46,6 +47,7 @@ public class MappersTest
 	{
 		private String name, description;
 		private Set<FooChild> children = new HashSet<> ();
+		private double price = -1d;
 
 		public String getName () {
 			return name;
@@ -69,6 +71,14 @@ public class MappersTest
 
 		public void setChildren ( Set<FooChild> children ) {
 			this.children = children;
+		}
+
+		public double getPrice () {
+			return price;
+		}
+
+		public void setPrice ( double price ) {
+			this.price = price;
 		}
 		
 	}
@@ -106,12 +116,12 @@ public class MappersTest
 			this.setRdfClassUri ( FOONS + "Foo" );
 			
 			// How the properties for beans of type F are mapped to RDF/OWL.
-			this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<F, String> ( FOONS + "name" ) );
+			this.addPropertyMapper ( "name", new LiteralPropRdfMapper<F, String> ( FOONS + "name" ) );
 			
 			// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 			this.addPropertyMapper ( "description", new CompositePropRdfMapper<> (
-				new OwlDatatypePropRdfMapper<F, String> ( FOONS + "description" ),
-				new OwlDatatypePropRdfMapper<F, String> ( iri ( "rdfs:comment" ) ) 
+				new LiteralPropRdfMapper<F, String> ( FOONS + "description" ),
+				new LiteralPropRdfMapper<F, String> ( iri ( "rdfs:comment" ) ) 
 			));
 		}
 	}
@@ -123,7 +133,7 @@ public class MappersTest
 	private Foo foo;
 	
 	@Before
-	public void doBasicMapping ()
+	public void initTestObjects ()
 	{
 		foo = new Foo ();
 		foo.setName ( "A Test Object" );
@@ -156,13 +166,18 @@ public class MappersTest
 						return FOONS + source.getName ().toLowerCase ().replace ( ' ', '_' );
 					}
 				});
-				this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "name" ) );
+				this.addPropertyMapper ( "name", new LiteralPropRdfMapper<Foo, String> ( FOONS + "name" ) );
 				this.addPropertyMapper ( "description", new CompositePropRdfMapper<> (
-					new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "description" ),
-					new OwlDatatypePropRdfMapper<Foo, String> ( iri ( "rdfs:comment" ) ) 
+					new LiteralPropRdfMapper<Foo, String> ( FOONS + "description" ),
+					new LiteralPropRdfMapper<Foo, String> ( iri ( "rdfs:comment" ) ) 
 				));
+				
+				// The default literal mapper converts most common Java types to corresponding XSD
+				this.addPropertyMapper ( "price", new LiteralPropRdfMapper<Foo, String> ( FOONS + "hasPrice" ) );				
 			}});
 		}};
+		
+		foo.setPrice ( 2.5 );
 		
 		mapFactory.getMapper ( foo ).map ( foo );
 		outputRdf ();
@@ -181,7 +196,24 @@ public class MappersTest
 			COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "rdfs:comment" ), true )
 			.flatMap ( COMMUTILS::literal2Value )
 			.orElse ( null )
+	  );	
+		
+		assertEquals ( 
+			"Wrong description mapping!", 
+			foo.getDescription (),
+			COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:description" ), true )
+			.flatMap ( COMMUTILS::literal2Value )
+			.orElse ( null )
 	  );		
+		
+
+		RDFTerm pricen = COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:hasPrice" ), true ).orElse ( null );
+		assertNotNull ( "Price not found!", pricen );
+		assertTrue ( "hasPrice node not literal!", pricen instanceof Literal );
+		
+		Literal pricel = (Literal) pricen;
+		assertEquals ( "Price wrong!", String.valueOf ( foo.getPrice () ), pricel.getLexicalForm () );
+		assertEquals ( "Price XSD type wrong!", iri ( "xsd:double" ), pricel.getDatatype ().getIRIString () );
 	}
 	
 	/** Tests the mapping of a single-value JavaBean property to an OWL object property */ 
@@ -193,7 +225,7 @@ public class MappersTest
 			this.setMapper ( Foo.class, new FooMapper<Foo> () );
 			this.setMapper ( FooChild.class, new FooMapper<FooChild> () {{
 				this.setRdfClassUri ( FOONS + "FooChild" );
-				this.addPropertyMapper ( "parent", new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
+				this.addPropertyMapper ( "parent", new ResourcePropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
 			}});
 		}};
 		
@@ -215,7 +247,7 @@ public class MappersTest
 	 * <p>Tests the mapping from a multi-value JavaBean property (i.e., one that returns a {@link Collection}) to 
 	 * multiple RDF/OWL statements, each having the same bean's URI and property.</p>
 	 * 
-	 * <p>This uses {@link CollectionPropRdfMapper}, which is equipped with a {@link OwlObjPropRdfMapper single-value property mapper}.   
+	 * <p>This uses {@link CollectionPropRdfMapper}, which is equipped with a {@link ResourcePropRdfMapper single-value property mapper}.   
 	 */
 	@Test
 	public void testOneToManyRelation () 
@@ -224,11 +256,11 @@ public class MappersTest
 			this.setGraphModel ( graph );
 			this.setMapper ( Foo.class, new FooMapper<Foo> () {{
 				this.addPropertyMapper ( "children",
-					new CollectionPropRdfMapper<Foo, FooChild> ( new OwlObjPropRdfMapper<Foo, FooChild> ( FOONS + "has-child") )); 
+					new CollectionPropRdfMapper<Foo, FooChild, String> ( new ResourcePropRdfMapper<Foo, FooChild> ( FOONS + "has-child") )); 
 			}});
 			this.setMapper ( FooChild.class, new FooMapper<FooChild> () {{
 				this.setRdfClassUri ( FOONS + "FooChild" );
-				this.addPropertyMapper ( "parent", new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
+				this.addPropertyMapper ( "parent", new ResourcePropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
 			}});
 		}};
 		
@@ -333,24 +365,24 @@ public class MappersTest
 				this.setRdfClassUri ( FOONS + "Foo" );
 				
 				// How the properties for beans of type F are mapped to RDF/OWL.
-				this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "name" ) );
+				this.addPropertyMapper ( "name", new LiteralPropRdfMapper<Foo, String> ( FOONS + "name" ) );
 				
 				// This can be used to map the same bean properties onto multiple RDF properties (either datatype or object)
 				this.addPropertyMapper ( "description", new CompositePropRdfMapper<Foo, String> (
-					new OwlDatatypePropRdfMapper<Foo, String> ( FOONS + "description" ),
-					new OwlDatatypePropRdfMapper<Foo, String> ( iri ( "rdfs:comment" ) ) 
+					new LiteralPropRdfMapper<Foo, String> ( FOONS + "description" ),
+					new LiteralPropRdfMapper<Foo, String> ( iri ( "rdfs:comment" ) ) 
 				));
 
 				// One-to-many relationship
 				this.addPropertyMapper ( "children",
-					new CollectionPropRdfMapper<Foo, FooChild> ( new OwlObjPropRdfMapper<Foo, FooChild> ( FOONS + "has-child") ));
+					new CollectionPropRdfMapper<Foo, FooChild, String> ( new ResourcePropRdfMapper<Foo, FooChild> ( FOONS + "has-child") ));
 				
 				// Maps from the related objects, instead of the current subject
 				this.addPropertyMapper ( "children",
-					new CollectionPropRdfMapper<Foo, FooChild> (
-						new InversePropRdfMapper<Foo, FooChild> ( 
+					new CollectionPropRdfMapper<Foo, FooChild, String> (
+						new InversePropRdfMapper<Foo, FooChild, String> ( 
 							// This is mapped a second time below, with another RDF property
-							new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "is-parent-of" )
+							new ResourcePropRdfMapper<FooChild, Foo> ( FOONS + "is-parent-of" )
 				)));
 				
 			}}); // Foo mapper
@@ -358,7 +390,7 @@ public class MappersTest
 			// One-One or Many-to-One relationship
 			this.setMapper ( FooChild.class, new FooMapper<FooChild> () {{
 				this.setRdfClassUri ( FOONS + "FooChild" );
-				this.addPropertyMapper ( "parent", new OwlObjPropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
+				this.addPropertyMapper ( "parent", new ResourcePropRdfMapper<FooChild, Foo> ( FOONS + "has-parent" ));
 			}});
 		}};
 		

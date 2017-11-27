@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.ebi.fg.java2rdf.mapping.properties.BeanPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.PropertyRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
  * Maps a JavaBean object and its getter-reacheable properties onto a set of RDF statements.  
@@ -67,10 +67,10 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 	{
 		try
 		{
-			if ( !super.map ( source, params )) return false;
+			if ( !super.map ( source, params ) ) return false;
 			
 			RdfUriGenerator<T> uriGen = getRdfUriGenerator ();
-			Validate.notNull ( uriGen, "Internal error: cannot map [%s] to RDF without a URI generator", source.toString () );
+			Validate.notNull ( uriGen, "Internal error: cannot map [%s] to RDF without an URI generator", source.toString () );
 			
 			String uri = uriGen.getUri ( source, params );
 			if ( uri == null ) return false;
@@ -122,10 +122,9 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 	 * the propRdfMapper into a new {@link BeanPropRdfMapper}, having sourcePropertyName as the JavaBean property it works
 	 * with.
 	 */
-	public <PT> void addPropertyMapper ( String sourcePropertyName, PropertyRdfMapper<T, PT> propRdfMapper )
+	public <PT, RV> void addPropertyMapper ( String sourcePropertyName, PropertyRdfMapper<T, PT, RV> propRdfMapper )
 	{
-		List<ObjRdfMapper<T>> mappers = this.getMappers ();
-		if ( mappers == null ) this.setMappers ( mappers = new LinkedList<> () );			
-		mappers.add ( new BeanPropRdfMapper<T, PT> ( sourcePropertyName, propRdfMapper ) );
+		if ( this.getMappers () == null ) this.setMappers ( new LinkedList<> () );
+		this.addMapper ( new BeanPropRdfMapper<T, PT, RV> ( sourcePropertyName, propRdfMapper ) );
 	}
 }

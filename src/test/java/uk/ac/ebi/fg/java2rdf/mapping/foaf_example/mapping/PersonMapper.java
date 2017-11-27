@@ -1,14 +1,14 @@
 package uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping;
 
 import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
-import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.hashUriSignature;
+import static uk.ac.ebi.utils.ids.IdUtils.hashUriSignature;
 
 import java.util.Map;
 
 import uk.ac.ebi.fg.java2rdf.mapping.BeanRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.model.Person;
-import uk.ac.ebi.fg.java2rdf.mapping.properties.OwlDatatypePropRdfMapper;
-import uk.ac.ebi.fg.java2rdf.mapping.urigen.RdfUriGenerator;
+import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
  * The mapper for {@link Person}. java2rdf works with class mapper, where every mapper maps a JavaBean class and 
@@ -33,7 +33,7 @@ public class PersonMapper extends BeanRdfMapper<Person>
 		this.setRdfClassUri ( iri ( "foaf", "Person" ) );
 		
 		// How to map primitive Java type to OWL datatype properties (or RDF-S).
-		this.addPropertyMapper ( "name", new OwlDatatypePropRdfMapper<Person, String> ( iri ( "foaf:givenName" ) ) );
-		this.addPropertyMapper ( "surname", new OwlDatatypePropRdfMapper<Person, String> ( iri ( "foaf:familyName" ) ) );
+		this.addPropertyMapper ( "name", new LiteralPropRdfMapper<Person, String> ( iri ( "foaf:givenName" ) ) );
+		this.addPropertyMapper ( "surname", new LiteralPropRdfMapper<Person, String> ( iri ( "foaf:familyName" ) ) );
 	}	
 }

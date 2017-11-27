@@ -9,7 +9,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi
  */
-public abstract class UriProvidedPropertyRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
+public abstract class UriProvidedPropertyRdfMapper<T, PT, RV> extends PropertyRdfMapper<T, PT, RV>
 {
 	private String targetPropertyUri;
 	

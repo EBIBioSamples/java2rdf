@@ -17,15 +17,15 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
  * @author Marco Brandizi
  *
  */
-public class CollectionPropRdfMapper<T, PT> extends PropertyRdfMapper<T, Collection<PT>>
+public class CollectionPropRdfMapper<T, PT, RV> extends PropertyRdfMapper<T, Collection<PT>, RV>
 {
-	private PropertyRdfMapper<T, PT> propertyMapper;
+	private PropertyRdfMapper<T, PT, RV> propertyMapper;
 	
 	public CollectionPropRdfMapper () {
 		this ( null );
 	}
 
-	public CollectionPropRdfMapper ( PropertyRdfMapper<T, PT> propertyMapper ) 
+	public CollectionPropRdfMapper ( PropertyRdfMapper<T, PT, RV> propertyMapper ) 
 	{
 		this.setPropertyMapper ( propertyMapper );
 	}
@@ -68,12 +68,12 @@ public class CollectionPropRdfMapper<T, PT> extends PropertyRdfMapper<T, Collect
 	}
 
 	/** The underlining property mapper used to map single values for the property {@link #getSourcePropertyName()} */
-	public PropertyRdfMapper<T, PT> getPropertyMapper () {
+	public PropertyRdfMapper<T, PT, RV> getPropertyMapper () {
 		return propertyMapper;
 	}
 
 	
-	public void setPropertyMapper ( PropertyRdfMapper<T, PT> propertyMapper ) 
+	public void setPropertyMapper ( PropertyRdfMapper<T, PT, RV> propertyMapper ) 
 	{
 		this.propertyMapper = propertyMapper;
 	}

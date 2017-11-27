@@ -18,28 +18,28 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
  * @author Marco Brandizi
  *
  */
-public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
+public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT, Object>
 {
-	private List<PropertyRdfMapper<T, PT>> propertyMappers;
+	private List<PropertyRdfMapper<T, PT, ?>> propertyMappers;
 	
 	public CompositePropRdfMapper ()
 	{
-		this ( (PropertyRdfMapper<T, PT>[]) null );
+		this ( (PropertyRdfMapper<T, PT, ?>[]) null );
 	}
 
 	@SafeVarargs // TODO: value-by value param check
-	public CompositePropRdfMapper ( PropertyRdfMapper<T, PT> ... propertyMappers )
+	public CompositePropRdfMapper ( PropertyRdfMapper<T, PT, ?> ... propertyMappers )
 	{
 		if ( propertyMappers == null ) return;
 		this.setPropertyMappers ( Arrays.asList ( propertyMappers ) );
 	}
 
 	@SafeVarargs // TODO: value-by value param check
-	public CompositePropRdfMapper ( String targetPropertyUri, UriProvidedPropertyRdfMapper<T, PT> ... propertyMappers ) 
+	public CompositePropRdfMapper ( String targetPropertyUri, UriProvidedPropertyRdfMapper<T, PT, ?> ... propertyMappers ) 
 	{
 		this ( propertyMappers );
 		if ( propertyMappers == null ) return;
-		for ( UriProvidedPropertyRdfMapper<T, PT> pmapper: propertyMappers )
+		for ( UriProvidedPropertyRdfMapper<T, PT, ?> pmapper: propertyMappers )
 			pmapper.setTargetPropertyUri ( targetPropertyUri );
 	}
 
@@ -60,7 +60,7 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 		));
 		
 		boolean result = false;
-		for ( PropertyRdfMapper<T, PT> mapper: this.propertyMappers )
+		for ( PropertyRdfMapper<T, PT, ?> mapper: this.propertyMappers )
 			result |= mapper.map ( source, propValue, params );
 
 		return result;
@@ -70,12 +70,12 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 	 * The property mappers used by {@link #map(Object, Object, Map)} to map a Java object pairs into multiple binary
 	 * relations and corresponding multiple RDF statements.
 	 */
-	public List<PropertyRdfMapper<T, PT>> getPropertyMappers ()
+	public List<PropertyRdfMapper<T, PT, ?>> getPropertyMappers ()
 	{
 		return propertyMappers;
 	}
 
-	public void setPropertyMappers ( List<PropertyRdfMapper<T, PT>> propertyMappers )
+	public void setPropertyMappers ( List<PropertyRdfMapper<T, PT, ?>> propertyMappers )
 	{
 		this.propertyMappers = propertyMappers;
 	}
@@ -89,7 +89,7 @@ public class CompositePropRdfMapper<T, PT> extends PropertyRdfMapper<T, PT>
 		super.setMapperFactory ( mapperFactory );
 		if ( this.propertyMappers == null ) return;
 		
-		for ( PropertyRdfMapper<T, PT> pmapper: this.propertyMappers )
+		for ( PropertyRdfMapper<T, PT, ?> pmapper: this.propertyMappers )
 			pmapper.setMapperFactory ( mapperFactory );
 	}
 	
