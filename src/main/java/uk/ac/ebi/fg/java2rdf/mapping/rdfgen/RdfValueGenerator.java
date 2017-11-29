@@ -2,14 +2,12 @@ package uk.ac.ebi.fg.java2rdf.mapping.rdfgen;
 
 import java.util.Map;
 
-import org.apache.commons.rdf.api.RDFTerm;
-
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
 
 
 /**
- * Produces RDF-  
- *
+ * TODO: comment me.
+ * 
  * @author brandizi
  * <dl><dt>Date:</dt><dd>24 Nov 2017</dd></dl>
  *

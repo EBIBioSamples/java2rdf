@@ -5,7 +5,6 @@ import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
 import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -127,4 +126,14 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 		if ( this.getMappers () == null ) this.setMappers ( new LinkedList<> () );
 		this.addMapper ( new BeanPropRdfMapper<T, PT, RV> ( sourcePropertyName, propRdfMapper ) );
 	}
+
+	@Override
+	public void setMapperFactory ( RdfMapperFactory mapperFactory )
+	{
+		super.setMapperFactory ( mapperFactory );
+		if ( this.rdfUriGenerator == null ) return;
+		
+		this.rdfUriGenerator.setMapperFactory ( mapperFactory );
+	}
+		
 }

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.ObjRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
-import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
 /**

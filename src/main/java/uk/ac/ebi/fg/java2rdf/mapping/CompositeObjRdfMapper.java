@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * A composite Java object mapper. 
  * 
@@ -39,10 +37,7 @@ public class CompositeObjRdfMapper<T> extends ObjRdfMapper<T>
 	public boolean map ( T source, Map<String, Object> params )
 	{
 		if ( source == null ) return false;
-		
-		if ( mappers == null || mappers.isEmpty () ) throw new NullPointerException ( String.format ( 
-			"Internal error: cannot map '%s'", StringUtils.abbreviate ( source.toString (), 30 )
-		));
+		if ( mappers == null || mappers.isEmpty () ) return true; 
 		
 		boolean result = false;
 		for ( ObjRdfMapper<T> mapper: mappers ) 

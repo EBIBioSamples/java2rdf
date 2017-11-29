@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Literal;
 
-import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.BeanRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
 
