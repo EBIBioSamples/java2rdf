@@ -5,3 +5,7 @@ A simple library to maps Java objects and Java beans onto RDF/OWL. Contrary to o
 We have a [5-min presentation about java2rdf](http://www.slideshare.net/mbrandizi/java2rdf). That shows code exerpts from [this example](https://github.com/EBIBioSamples/java2rdf/tree/master/src/test/java/uk/ac/ebi/fg/java2rdf/mapping/foaf_example), we also have  [another example](https://github.com/EBIBioSamples/java2rdf/blob/master/src/test/java/uk/ac/ebi/fg/java2rdf/mapping/MappersTest.java), showing a slightly different, 'quick-n-dirty' way to define object mappings (we recommend the former approach in real applications).
 
 [Here](http://www.marcobrandizi.info/mysite/node/153) you can read something more about java2rdf and the BioSD Linked Data Project, for which it was built.
+
+Note that version 2 has been re-implemented based on Commons-RDF, so that now you can choose to configure java2rdf 
+to use Jena or RDF4j as underlining RDF framework (we don't support OWLAPI anymore).
+ 
