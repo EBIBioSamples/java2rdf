@@ -1,6 +1,7 @@
 package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.Validate;
 import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfLiteralGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
@@ -107,11 +109,17 @@ public class ResourcePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T
 	@Override
 	public void setRdfValueGenerator ( RdfValueGenerator<PT, String> rdfValueGenerator )
 	{
-		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfUriGenerator ) ) 
+		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfUriGenerator ) )
+		{
+			String msgTail = Optional.ofNullable ( rdfValueGenerator )
+				.map ( g -> ", refusing the generator of type " + g .getClass ().getName () )
+				.orElse ( "" );
+			
 			throw new IllegalArgumentException ( 
-				"setRdfValueGenerator() must get a type of type RdfValueGenerator for " + this.getClass ().getSimpleName () + 
-				", refusing the type " + rdfValueGenerator.getClass ().getName ()
-		); 
+				"setRdfValueGenerator() must get a type of type RdfUriGenerator for " + this.getClass ().getSimpleName () 
+				+ msgTail
+			);
+		}
 		super.setRdfValueGenerator ( rdfValueGenerator );
 	}
 	

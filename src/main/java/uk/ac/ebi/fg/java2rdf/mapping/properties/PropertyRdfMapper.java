@@ -3,6 +3,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.rdf.api.Literal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,8 @@ import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
  *
  * @param <T> the type of the Java object that plays the role of subject in the mapping worked out by this mapper.
  * @param <PT> the type of the Java object that plays the role of object in the mapping worked out by this mapper.
- * @param <RV> the type of RDF entity that this mapper generates for values of PT. This is used for 
+ * @param <RV> the type of RDF entity that this mapper generates for values of PT, eg, a {@link Literal} or
+ * a String for URIs. 
  * 
  */
 public abstract class PropertyRdfMapper<T, PT, RV> extends RdfMapper<T>

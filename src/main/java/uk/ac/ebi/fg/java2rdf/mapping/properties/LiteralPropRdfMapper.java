@@ -3,6 +3,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -60,7 +61,10 @@ public class LiteralPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T,
 			if ( subjUri == null ) return false;
 
 			RdfLiteralGenerator<PT> targetValGen = this.getLiteralGenerator ();
-			Validate.notNull ( mapFactory, "Internal error: cannot map a OWL data property without a literal generator" );
+			Validate.notNull ( 
+				mapFactory, 
+				"Internal error: the " + this.getClass ().getSimpleName () + " mapper requires a literal generator" 
+			);
 			
 			Literal targetRdfVal = targetValGen.getValue ( propValue, params );
 			if ( targetRdfVal == null ) return false;
@@ -108,11 +112,17 @@ public class LiteralPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T,
 	@Override
 	public void setRdfValueGenerator ( RdfValueGenerator<PT, Literal> rdfValueGenerator )
 	{
-		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfLiteralGenerator ) ) 
+		if ( ! ( rdfValueGenerator != null && rdfValueGenerator instanceof RdfLiteralGenerator ) )
+		{
+			String msgTail = Optional.ofNullable ( rdfValueGenerator )
+				.map ( g -> ", refusing the generator of type " + g.getClass ().getName () )
+				.orElse ( "" );
+			
 			throw new IllegalArgumentException ( 
-				"setRdfValueGenerator() must get a type of type RdfValueGenerator for " + this.getClass ().getSimpleName () + 
-				", refusing the type " + rdfValueGenerator.getClass ().getName ()
-		); 
+				"setRdfValueGenerator() must get a type of type RdfLiteralGenerator for " + this.getClass ().getSimpleName () 
+				+ msgTail
+			);
+		}
 		super.setRdfValueGenerator ( rdfValueGenerator );
 	}
 	

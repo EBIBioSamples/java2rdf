@@ -47,7 +47,7 @@ public class InversePropRdfMapper<T, PT, RV> extends PropertyRdfMapper<T, PT, RV
 			StringUtils.abbreviate ( propValue.toString (), 30 ) 
 		);
 		
-		// Map the value, since if it comes here as a result of an inversion, it will be mapped nowhere else
+		// Map the value too, since if it comes here as a result of an inversion, it will be mapped nowhere else, 
 		return inversePropMapper.map ( propValue, source, params ) & getMapperFactory ().map ( propValue, params );
 	}
 

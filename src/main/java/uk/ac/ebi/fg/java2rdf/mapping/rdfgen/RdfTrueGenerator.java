@@ -5,7 +5,8 @@ import java.util.Map;
 import org.apache.commons.rdf.api.Literal;
 
 /**
- * TODO: comment me!
+ * A {@link RdfLiteralGenerator literal generator} for booleans that returns null for the false value.
+ * This can be useful when you want to report true values only and you consider false as default.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>29 Nov 2017</dd></dl>
