@@ -82,21 +82,21 @@ public class FoafMappingTest
 		// Some tests
 		SparqlBasedTester tester = new SparqlBasedTester ( model, NamespaceUtils.asSPARQLProlog () );
 		
-		tester.testRDFOutput ( "No John Smith!", 
+		tester.ask ( "No John Smith!", 
 			"ASK { ?person        a                foaf:Person ;\n" + 
 			"        foaf:familyName  'Smith' ;\n" + 
 			"        foaf:givenName   'John'.\n" +
 			"}" 
 		);
 		
-		tester.testRDFOutput ( "No Ora Lassila!",
+		tester.ask ( "No Ora Lassila!",
 		  "ASK {   ?person    a                foaf:Person ;\n" + 
 		  "        foaf:familyName  'Lassila' ;\n" + 
 		  "        foaf:givenName   'Ora'.\n" +
 		  "}"
 		);
 		
-		tester.testRDFOutput ( "No sem-web-document!",
+		tester.ask ( "No sem-web-document!",
 		  "ASK { exart:123  a           foaf:Document ;\n" + 
 		  "        rdfs:comment       'A new form of Web content that is meaningful to computers will unleash a revolution of new possibilities' ;\n" + 
 		  "        dcterms:abstract   'A new form of Web content that is meaningful to computers will unleash a revolution of new possibilities' ;\n" + 
@@ -104,7 +104,7 @@ public class FoafMappingTest
 		  "}"
 		);
 
-		tester.testRDFOutput ( "No links to authors!",
+		tester.ask ( "No links to authors!",
 			"ASK { exart:123\n" +
 		  "        dcterms:creator\n" + 
 			"          [ foaf:familyName  'Lassila'; foaf:givenName   'Ora' ],\n" +
@@ -113,7 +113,7 @@ public class FoafMappingTest
 		  "}"
     );
 
-		tester.testRDFOutput ( "No link to editor!",
+		tester.ask ( "No link to editor!",
 				"ASK { exart:123\n" +
 			  "        dcterms:publisher\n" + 
 				"          [ foaf:familyName  'Smith'; foaf:givenName   'John' ].\n" +

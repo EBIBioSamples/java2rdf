@@ -418,18 +418,18 @@ public class MappersTest
 			( (JenaGraph) graph ).asJenaModel (), NamespaceUtils.asSPARQLProlog () 
 		);
 		
-		tester.testRDFOutput ( "Noo child 1 instantiation!", "ASK { foo:a_test_child_1 rdf:type foo:FooChild }" );
-		tester.testRDFOutput ( "Noo child 2 instantiation!", "ASK { foo:a_test_child_2 rdf:type foo:FooChild }" );
-		tester.testRDFOutput ( "Noo child 1 descr!", "ASK { foo:a_test_child_1 foo:description 'A test description for a test child 1' }" );
-		tester.testRDFOutput ( "Noo child 1 comment!", "ASK { foo:a_test_child_1 rdfs:comment 'A test description for a test child 1' }" );
-		tester.testRDFOutput ( "Noo child 2 name!", "ASK { foo:a_test_child_2 foo:name 'A test Child 2' }" );
-		tester.testRDFOutput ( "Noo child 1 is-parent-of!", "ASK { foo:a_test_child_1 foo:is-parent-of foo:a_test_object }" );
-		tester.testRDFOutput ( "Noo child 2 is-parent-of!", "ASK { foo:a_test_child_2 foo:is-parent-of foo:a_test_object }" );
+		tester.ask ( "Noo child 1 instantiation!", "ASK { foo:a_test_child_1 rdf:type foo:FooChild }" );
+		tester.ask ( "Noo child 2 instantiation!", "ASK { foo:a_test_child_2 rdf:type foo:FooChild }" );
+		tester.ask ( "Noo child 1 descr!", "ASK { foo:a_test_child_1 foo:description 'A test description for a test child 1' }" );
+		tester.ask ( "Noo child 1 comment!", "ASK { foo:a_test_child_1 rdfs:comment 'A test description for a test child 1' }" );
+		tester.ask ( "Noo child 2 name!", "ASK { foo:a_test_child_2 foo:name 'A test Child 2' }" );
+		tester.ask ( "Noo child 1 is-parent-of!", "ASK { foo:a_test_child_1 foo:is-parent-of foo:a_test_object }" );
+		tester.ask ( "Noo child 2 is-parent-of!", "ASK { foo:a_test_child_2 foo:is-parent-of foo:a_test_object }" );
 		
-		tester.testRDFOutput ( "Noo test-obj instantiation!", "ASK { foo:a_test_object rdf:type foo:Foo }" );
-		tester.testRDFOutput ( "Noo test-obj instantiation!", "ASK { foo:a_test_object foo:name 'A Test Object' }" );
-		tester.testRDFOutput ( "Noo test-obj has-child 1!", "ASK { foo:a_test_object foo:has-child foo:a_test_child_1 }" );
-		tester.testRDFOutput ( "Noo test-obj has-child 1!", "ASK { foo:a_test_object foo:has-child foo:a_test_child_2 }" );
+		tester.ask ( "Noo test-obj instantiation!", "ASK { foo:a_test_object rdf:type foo:Foo }" );
+		tester.ask ( "Noo test-obj instantiation!", "ASK { foo:a_test_object foo:name 'A Test Object' }" );
+		tester.ask ( "Noo test-obj has-child 1!", "ASK { foo:a_test_object foo:has-child foo:a_test_child_1 }" );
+		tester.ask ( "Noo test-obj has-child 1!", "ASK { foo:a_test_object foo:has-child foo:a_test_child_2 }" );
 	}
 	
 	
