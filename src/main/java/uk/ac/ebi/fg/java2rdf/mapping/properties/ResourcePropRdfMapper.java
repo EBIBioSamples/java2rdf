@@ -54,6 +54,7 @@ public class ResourcePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T
 			//
 			
 			// This is necessary, cause source/pval may be swapped by InversePropRdfMapper
+			// TODO: Is this the right place where to handle it, or should it be on behalf of InversePropRdfMapper?
 			String subjUri = mapFactory.getUri ( source, params );
 			if ( subjUri == null ) return false;
 

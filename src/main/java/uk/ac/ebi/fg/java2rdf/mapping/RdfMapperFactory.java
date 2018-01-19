@@ -67,7 +67,7 @@ public class RdfMapperFactory
 		ObjRdfMapper<T> result = mappers.get ( clazz );
 		if ( result != null ) return result;
 		
-		// else,try with the superclasses/interfaces, so that one can map an higher level to a more specific implementation
+		// else, try with the superclasses/interfaces, so that one can map an higher level to a more specific implementation
 		Class<T> sup = (Class<T>) clazz.getSuperclass ();
 		if ( sup != null && ( result = getMapper ( sup ) )!= null ) return result;
 		

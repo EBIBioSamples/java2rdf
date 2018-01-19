@@ -17,7 +17,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.PropertyRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
- * Maps a JavaBean object and its getter-reacheable properties onto a set of RDF statements.  
+ * Maps a JavaBean object and its getter-reachable properties onto a set of RDF statements.  
  *
  * <dl><dt>date</dt><dd>Mar 24, 2013</dd></dl>
  * @author Marco Brandizi

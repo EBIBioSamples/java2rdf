@@ -39,11 +39,10 @@ public class CompositeObjRdfMapper<T> extends ObjRdfMapper<T>
 		if ( source == null ) return false;
 		if ( mappers == null || mappers.isEmpty () ) return true; 
 		
-		boolean result = false;
 		for ( ObjRdfMapper<T> mapper: mappers ) 
-			result |= mapper.map ( source, params );
+			mapper.map ( source, params );
 		
-		return result;
+		return true;
 	}
 
 	/**

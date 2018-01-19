@@ -13,11 +13,11 @@ import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
 /**
- * A generic mapper that maps a Java object pair, related by a binary relationship, i.e., a property, into an RDF 
- * statement. 
+ * A generic mapper that maps a pair of Java objects, which are related by a binary relationship, into an RDF 
+ * statement and using an RDF predicate (i.e., property). 
  * 
- * Note that this mapper doesn't necessarily maps to a single RDF statement, nor does it always with the same 
- * OWL/RDF property. There are cases more generic than that, if you need such specific use case, use 
+ * Note that this mapper doesn't necessarily map to a single RDF statement, nor does it always use the same 
+ * OWL/RDF property, since there are use cases more generic than that. If you need such specific use case, use 
  * {@link UriProvidedPropertyRdfMapper}.
  *
  * <dl><dt>date</dt><dd>8 Aug 2013</dd></dl>
@@ -42,9 +42,11 @@ public abstract class PropertyRdfMapper<T, PT, RV> extends RdfMapper<T>
 
 	/**
 	 * (source, propValue) are intended to be an element of a binary relation R. This method defines how such object
-	 * pair spawns an RDF statement (or more than one). The default version just checks that propValue != null, return
+	 * pair spawns an RDF statement (or more than one). The default version here just checks that propValue != null, return
 	 * false if it is. The final RDF target value gathered from propValue should be generated taking into account 
 	 * {@link #getRdfValueGenerator()}.
+	 * 
+	 * Note that this implementation raises an exception if source is null. 
 	 * 
 	 * @see ObjRdfMapper#map(Object, Map) for further information about params and return value.
 	 * 
