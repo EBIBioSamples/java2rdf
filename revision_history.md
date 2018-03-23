@@ -1,10 +1,14 @@
 # Revision History
 
-## 2.0.1-SNAPSHOT
+## 2.0.2-SNAPSHOT
 
+## 2.0.1
+
+  * Needed for amending dependency error 
+  
 ## 2.0
 
-  * Migration to rdfutils package, and OWLApi/Jena pluggability. 
+  * Migration to rdfutils package, and OWLApi/Jena pluggability.
 
 ## 1.0
 

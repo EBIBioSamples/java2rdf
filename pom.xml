@@ -4,7 +4,7 @@
 
   <groupId>uk.ac.ebi.fg</groupId>
   <artifactId>java2rdf</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.1</version>
   <packaging>jar</packaging>
 
   <name>java2rdf library</name>
@@ -23,7 +23,7 @@
     <owlapi.version>3.5.2</owlapi.version>
 		<commonsrdf.version>0.3.0-incubating</commonsrdf.version>
     <jena.version>3.5.0</jena.version>
-    <rdfutils.version>2.0-SNAPSHOT</rdfutils.version>
+    <rdfutils.version>2.0.1-SNAPSHOT</rdfutils.version>
     <slf4j.version>1.7.5</slf4j.version>
   </properties>
 
