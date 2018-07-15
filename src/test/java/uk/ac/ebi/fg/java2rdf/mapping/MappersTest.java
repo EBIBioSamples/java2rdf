@@ -31,6 +31,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.CompositePropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.InversePropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.ResourcePropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfTrueGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
 /**
@@ -48,6 +49,7 @@ public class MappersTest
 		private String name, description;
 		private Set<FooChild> children = new HashSet<> ();
 		private double price = -1d;
+		private boolean isExpired = false;
 
 		public String getName () {
 			return name;
@@ -80,7 +82,16 @@ public class MappersTest
 		public void setPrice ( double price ) {
 			this.price = price;
 		}
-		
+
+		public boolean isExpired ()
+		{
+			return isExpired;
+		}
+
+		public void setExpired ( boolean isExpired )
+		{
+			this.isExpired = isExpired;
+		}
 	}
 	
 	public static class FooChild extends Foo
@@ -173,11 +184,15 @@ public class MappersTest
 				));
 				
 				// The default literal mapper converts most common Java types to corresponding XSD
-				this.addPropertyMapper ( "price", new LiteralPropRdfMapper<Foo, String> ( FOONS + "hasPrice" ) );				
+				this.addPropertyMapper ( "price", new LiteralPropRdfMapper<Foo, String> ( FOONS + "hasPrice" ) );
+				this.addPropertyMapper ( "expired",
+					new LiteralPropRdfMapper<> ( iri ( "foo:isExpired" ), new RdfTrueGenerator () )
+				);
 			}});
 		}};
 		
 		foo.setPrice ( 2.5 );
+		foo.setExpired ( true );
 		
 		mapFactory.getMapper ( foo ).map ( foo );
 		outputRdf ();
@@ -214,6 +229,15 @@ public class MappersTest
 		Literal pricel = (Literal) pricen;
 		assertEquals ( "Price wrong!", String.valueOf ( foo.getPrice () ), pricel.getLexicalForm () );
 		assertEquals ( "Price XSD type wrong!", iri ( "xsd:double" ), pricel.getDatatype ().getIRIString () );
+
+		RDFTerm expiredn = COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:isExpired" ), true ).orElse ( null );
+		assertNotNull ( "expired flag not found!", expiredn );
+		assertTrue ( "isExpired node not literal!", expiredn instanceof Literal );
+		
+		Literal expiredl = (Literal) expiredn;
+		assertEquals ( "expired flag wrong!", String.valueOf ( foo.isExpired () ), expiredl.getLexicalForm () );
+		assertEquals ( "expired flag XSD type wrong!", iri ( "xsd:boolean" ), expiredl.getDatatype ().getIRIString () );
+	
 	}
 	
 	/** Tests the mapping of a single-value JavaBean property to an OWL object property */ 

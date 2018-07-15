@@ -22,6 +22,6 @@ public class RdfTrueGenerator extends RdfLiteralGenerator<Boolean>
 	public Literal getLiteral ( Boolean source, Map<String, Object> params )
 	{
 		if ( source == null || !source ) return null;
-		return super.getLiteral ( source );
+		return super.getLiteral ( source, params );
 	}
 }
