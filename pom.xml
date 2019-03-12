@@ -9,8 +9,8 @@
 
   <name>java2rdf library</name>
   <description>
-  		java2rdf is a library to map JavaBeans onto RDF/OWL classes, based on declarations that map JavaBeans on
-  		subject-centric RDF graphs.
+  	java2rdf is a library to map JavaBeans onto RDF/OWL classes, based on declarations that map JavaBeans on
+  	subject-centric RDF graphs.
 	</description>
   <url>http://github.com/marco-brandizi/java2rdf</url>
 
@@ -22,7 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <owlapi.version>3.5.2</owlapi.version>
 		<commonsrdf.version>0.5.0</commonsrdf.version>
-    <jena.version>3.9.0</jena.version>
+    <jena.version>3.10.0</jena.version>
     <rdfutils.version>2.0.1-SNAPSHOT</rdfutils.version>
     <slf4j.version>1.7.5</slf4j.version>
   </properties>
@@ -121,10 +121,10 @@
 		</dependency>	  
 
 		<dependency>
-		  <groupId>info.marcobrandizi</groupId>
+			<groupId>info.marcobrandizi</groupId>
 			<artifactId>rdfutils-jena</artifactId>
-	  		<version>${rdfutils.version}</version>
-	  		<scope>test</scope>
+			<version>${rdfutils.version}</version>
+			<scope>test</scope>
 		</dependency>
 
   </dependencies>
