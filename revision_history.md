@@ -5,10 +5,10 @@
   while (until we start introducing incompatible changes), but that's not officially 
   supported.
 
-## 2.1.2-SNAPSHOT
+## 2.1.3-SNAPSHOT
   * Just started
 
-## 2.1.1
+## 2.1.3
   * Needed to amend dependency error.
 
 ## 2.1
