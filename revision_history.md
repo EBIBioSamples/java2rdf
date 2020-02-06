@@ -5,15 +5,18 @@
   while (until we start introducing incompatible changes), but that's not officially 
   supported.
 
-## 2.1.1-SNAPSHOT
+## 2.1.3-SNAPSHOT
   * Just started
+
+## 2.1.3
+  * Needed to amend dependency error.
 
 ## 2.1
   * Migration to Jena 3.9.0.
   * Bugfix in `RdfTrueGenerator`.
 
 ## 2.0.1
-  * Needed for amending dependency error.
+  * Needed to amend dependency error.
   
 ## 2.0
   * Migration to rdfutils package, and OWLApi/Jena pluggability.
