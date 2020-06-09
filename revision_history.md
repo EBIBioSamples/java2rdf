@@ -5,8 +5,11 @@
   while (until we start introducing incompatible changes), but that's not officially 
   supported.
 
-## 2.1.3-SNAPSHOT
+## 2.1.5-SNAPSHOT
   * Just started
+
+## 2.1.4
+  * Release to link jutils/rdfutils to latest stable releases.
 
 ## 2.1.3
   * Needed to amend dependency error.

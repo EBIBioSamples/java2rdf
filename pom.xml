@@ -23,7 +23,7 @@
     <owlapi.version>3.5.2</owlapi.version>
 		<commonsrdf.version>0.5.0</commonsrdf.version>
     <jena.version>3.10.0</jena.version>
-    <rdfutils.version>2.1.1-SNAPSHOT</rdfutils.version>
+    <rdfutils.version>2.1.1</rdfutils.version>
     <slf4j.version>1.7.5</slf4j.version>
   </properties>
 
