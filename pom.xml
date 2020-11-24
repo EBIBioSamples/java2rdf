@@ -185,12 +185,19 @@
     </repository>
 
 		<!-- rdfutils -->
-		<repository>
+    <repository>
+    	<id>mbrandizi.jfrog.io</id>
+			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
+	    <snapshots><enabled>true</enabled></snapshots>
+	    <releases><enabled>true</enabled></releases>
+    </repository>
+		
+		<!-- repository>
 			<id>marcobrandizi.info</id>
 			<url>http://www.marcobrandizi.info:8081/artifactory/maven</url>
 			<releases><enabled>true</enabled></releases>
 			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
+		</repository -->
   				  	
   </repositories>
 
