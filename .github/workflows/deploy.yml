@@ -32,5 +32,5 @@ jobs:
         GITHUB_TOKEN: ${{github.token}}
         REPO_USER: ${{secrets.REPO_USER}}
         REPO_PWD: ${{secrets.REPO_PWD}}
-      run: mvn deploy -s settings.xml  --no-transfer-progress --batch-mode
+      run: mvn deploy -s maven-settings.xml  --no-transfer-progress --batch-mode
         
