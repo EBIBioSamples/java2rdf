@@ -3,6 +3,7 @@
 	<!-- Used with Travis builds -->
     <server>
       <id>github</id>
+      <username>${env.REPO_USER}</username>
       <password>${env.REPO_PWD}</password>
     </server>
   </servers>

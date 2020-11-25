@@ -31,5 +31,5 @@ jobs:
     - name: Deploy
       run: mvn deploy -s settings.xml  --no-transfer-progress --batch-mode
       env:
+        REPO_USER: ${{ secrets.REPO_USER }}
         REPO_PWD: ${{ secrets.REPO_PWD }}
-  
