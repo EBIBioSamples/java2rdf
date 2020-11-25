@@ -34,5 +34,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         REPO_PWD: ${{ secrets.REPO_PWD }}
-        TEST: "Hello
+        TEST: "Hello"
   
