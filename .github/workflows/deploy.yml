@@ -29,8 +29,10 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Deploy
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      #run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      run: echo $TEST
       env:
         GITHUB_TOKEN: ${{ github.token }}
         REPO_PWD: ${{ secrets.REPO_PWD }}
+        TEST: "Hello
   
