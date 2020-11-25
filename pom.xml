@@ -162,6 +162,17 @@
 		       </properties>
 		    </configuration>
 		  </plugin>
+		  
+			<plugin>
+	      <groupId>com.github.github</groupId>
+	      <artifactId>site-maven-plugin</artifactId>
+	      <version>0.12</version>
+	      <executions>
+	        <execution>
+	          <phase/>
+	        </execution>
+	      </executions>
+      </plugin>    	    
 		
 		</plugins>
 	
@@ -201,4 +212,15 @@
   				  	
   </repositories>
 
+	<distributionManagement>
+    <snapshotRepository>
+    	<id>mbrandizi.jfrog.io</id>
+			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
+    </snapshotRepository>
+
+    <repository>
+    	<id>mbrandizi.jfrog.io</id>
+			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
+    </repository>	
+	</distributionManagement>
 </project>

@@ -1,8 +1,13 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
 	<!-- Used with Travis builds -->
-    <server>
+    <!-- server>
       <id>github</id>
+      <username>${env.REPO_USER}</username>
+      <password>${env.REPO_PWD}</password>
+    </server -->
+    <server>
+      <id>mbrandizi.jfrog.io</id>
       <username>${env.REPO_USER}</username>
       <password>${env.REPO_PWD}</password>
     </server>
