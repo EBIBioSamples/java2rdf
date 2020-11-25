@@ -29,9 +29,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Deploy
-      #run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      run: |
-        echo "The VAR IS: '$TEST'"
+      run: mvn deploy -s settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
         REPO_PWD: ${{ secrets.REPO_PWD }}
