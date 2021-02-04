@@ -6,9 +6,6 @@
   supported.
 * Continuous integration migrated to github Actions.
 
-## 2.1.5-SNAPSHOT
-* Just started
-
 ## 2.1.4
 * Release to link jutils/rdfutils to latest stable releases.
 
