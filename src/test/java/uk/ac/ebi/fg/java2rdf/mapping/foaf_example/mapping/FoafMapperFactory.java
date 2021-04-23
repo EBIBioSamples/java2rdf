@@ -21,7 +21,7 @@ public class FoafMapperFactory extends RdfMapperFactory
 	static 
 	{
 		// You'll typically do this on a static block, to prepare your own namespaces. The class already manages common 
-		// ones. We plan to support the equivalent utility in OWLAPI or Jena in future.
+		// ones. We plan to support the equivalent utility in Jena in future.
 		//
 		NamespaceUtils.registerNs ( "ex", 		FoafMappingTest.EXNS );
 		NamespaceUtils.registerNs ( "foaf",		"http://xmlns.com/foaf/0.1/" );

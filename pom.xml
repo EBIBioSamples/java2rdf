@@ -20,11 +20,13 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <owlapi.version>3.5.2</owlapi.version>
-		<commonsrdf.version>0.5.0</commonsrdf.version>
-    <jena.version>3.17.0</jena.version>
+    
+    <jena.version>4.1.0-SNAPSHOT</jena.version>
+	  <commonsrdf.version>1.0-SNAPSHOT</commonsrdf.version>
+    
     <rdfutils.version>3.0-SNAPSHOT</rdfutils.version>
     <slf4j.version>1.7.5</slf4j.version>
+    
   </properties>
 
   <dependencies>
@@ -186,6 +188,13 @@
 			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
 	    <snapshots><enabled>true</enabled></snapshots>
 	    <releases><enabled>true</enabled></releases>
+    </repository>
+    
+    <repository>
+    	<id>jena-snapshots</id>
+			<url>https://repository.apache.org/content/groups/snapshots</url>
+	    <snapshots><enabled>true</enabled></snapshots>
+	    <releases><enabled>false</enabled></releases>
     </repository>
 		  				  	
   </repositories>
