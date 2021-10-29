@@ -1,6 +1,9 @@
 # Revision History
 
-## 3.0-SNAPSHOT (being developed in the JDK11 branch) 
+## 3.0.1-SNAPSHOT
+* Current snapshot
+
+## 3.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. java2rdf will possibly work with 1.8 for a
   while (until we start introducing incompatible changes), but that's not officially 
   supported.
