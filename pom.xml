@@ -24,7 +24,7 @@
     <jena.version>4.1.0</jena.version>
 	  <commonsrdf.version>1.0-SNAPSHOT</commonsrdf.version>
     
-    <rdfutils.version>3.0</rdfutils.version>
+    <rdfutils.version>3.0.1-SNAPSHOT</rdfutils.version>
     <slf4j.version>1.7.5</slf4j.version>
     
   </properties>
