@@ -1,14 +1,20 @@
 package uk.ac.ebi.fg.java2rdf.mapping.rdfgen;
 
-import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
+import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.RDF_GRAPH_UTILS;
 
 import java.util.Map;
 
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.Literal;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 
+import info.marcobrandizi.rdfutils.GraphUtils;
+import info.marcobrandizi.rdfutils.jena.JenaGraphUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.BeanRdfMapper;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
+import uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils;
 
 /**
  * Generates a literal value (a string at the moment) that corresponds to a JavaBean object in a RDF representation.
@@ -28,7 +34,7 @@ import uk.ac.ebi.fg.java2rdf.mapping.properties.LiteralPropRdfMapper;
 public class RdfLiteralGenerator<T> extends RdfValueGenerator<T, Literal>
 {
 	private boolean isEmptyStringNull = true;
-	
+		
 	public RdfLiteralGenerator () {
 	}
 
@@ -47,7 +53,7 @@ public class RdfLiteralGenerator<T> extends RdfValueGenerator<T, Literal>
 	 * Here it is where the real job happens and then {@link #getValue(Object)} is implemented as a synonym of this.
 	 * 
 	 * The default implementation converts to a generic text literal if T is of string type (without datatype 
-	 * and without language), it uses {@link CommonsRDFUtils#COMMUTILS#value2TypedLiteral(Graph, Object)}
+	 * and without language), it uses {@link GraphUtils#value2TypedLiteral(Graph, Object)}
 	 * for other types (i.e., converts common Java types to XSD correspondent types).
 	 *  
 	 */
@@ -55,14 +61,14 @@ public class RdfLiteralGenerator<T> extends RdfValueGenerator<T, Literal>
 	{
 		if ( source == null ) return null;
 		
-		Graph g = this.getMapperFactory ().getGraphModel ();
+		Model g = this.getMapperFactory ().getGraphModel ();
 		
 		if ( ! ( source instanceof String ) )
-			return COMMUTILS.value2TypedLiteral ( g, source ).orElse ( null );
+			return RDF_GRAPH_UTILS.value2TypedLiteral ( g, source ).orElse ( null );
 		
 		String srcStr = (String) source;
 		if ( this.isEmptyStringNull && srcStr.isEmpty () ) srcStr = null;
-		return COMMUTILS.value2Literal ( g, srcStr ).orElse ( null );
+		return RDF_GRAPH_UTILS.value2Literal ( g, srcStr ).orElse ( null );
 	}
 	
 	public Literal getLiteral ( T source ) {

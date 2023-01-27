@@ -3,7 +3,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.properties;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.rdf.api.Literal;
+import org.apache.jena.rdf.model.Literal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

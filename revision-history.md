@@ -1,7 +1,10 @@
 # Revision History
 
-## 3.0.1-SNAPSHOT
-* Current snapshot
+*This file was last reviewed on 2023-01-27*
+
+## 4.0-SNAPSHOT
+* Apache commons RDF removed. **Now jena2rdf depends on Jena again**, sorry, commons RDF seems dead and I 
+  don't have time anymore to maintain my own patches, which are never merged into the main codebase.
 
 ## 3.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. java2rdf will possibly work with 1.8 for a

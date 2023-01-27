@@ -1,8 +1,8 @@
 package uk.ac.ebi.fg.java2rdf.mapping;
 
 
-import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
 import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
+import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.RDF_GRAPH_UTILS;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class BeanRdfMapper<T> extends CompositeObjRdfMapper<T>
 			
 			// Generates and rdf:type statement
 			String targetRdfClassUri = getTargetRdfClassUri ();
-			if ( targetRdfClassUri != null ) COMMUTILS.assertResource ( 
+			if ( targetRdfClassUri != null ) RDF_GRAPH_UTILS.assertResource ( 
 				mapFactory.getGraphModel (), uri, iri ( "rdf:type" ), targetRdfClassUri 
 			);
 			// TODO: else WARN

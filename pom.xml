@@ -2,9 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+	<parent>
+	  <groupId>info.marcobrandizi</groupId>
+	  <artifactId>rdfutils</artifactId>
+	  <version>4.0</version>
+	</parent>
+
   <groupId>uk.ac.ebi.fg</groupId>
   <artifactId>java2rdf</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>4.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>java2rdf library</name>
@@ -18,31 +24,18 @@
 		<developerConnection>scm:git:git@github.com:EBIBioSamples/java2rdf.git</developerConnection>
 	</scm>	
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    
-    <jena.version>4.1.0</jena.version>
-	  <commonsrdf.version>1.0-SNAPSHOT</commonsrdf.version>
-    
-    <rdfutils.version>3.0.1-SNAPSHOT</rdfutils.version>
-    <slf4j.version>1.7.5</slf4j.version>
-    
-  </properties>
 
   <dependencies>
   
-		<!-- Common facade for logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!-- Use Logback as concrete logger for testing -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -50,69 +43,16 @@
 		<dependency>
 		  <groupId>org.slf4j</groupId>
 		  <artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
-	
-		<dependency>
-		  <groupId>info.marcobrandizi</groupId>
-			<artifactId>rdfutils-commonsrdf</artifactId>
-	  	<version>${rdfutils.version}</version>
-		</dependency>
-	
+		
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>  
-
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>		
-		</dependency>
-		
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.8.0</version>
-		</dependency>
-
-		
-		<!-- TEST -->
- 	  
-		<dependency>
-		  <groupId>org.apache.commons</groupId>
-		  <artifactId>commons-rdf-jena</artifactId>
-		  <version>${commonsrdf.version}</version>
-		  <scope>test</scope>
-		  <exclusions>
-		  	<!-- See below -->
-				<exclusion>
-					<groupId>org.apache.jena</groupId>
-					<artifactId>jena-osgi</artifactId>
-				</exclusion>		  
-		  </exclusions>
-		</dependency>
-
-		<!-- Used by commons-rdf-jena, we align it to the rest of Jena -->		
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>jena-osgi</artifactId>
-		  <scope>test</scope>
-			<version>${jena.version}</version>		  
-		</dependency>	  
-
+		 	  
 		<dependency>
 			<groupId>info.marcobrandizi</groupId>
 			<artifactId>rdfutils-jena</artifactId>
-			<version>${rdfutils.version}</version>
-			<scope>test</scope>
 		</dependency>
 
   </dependencies>
@@ -125,50 +65,17 @@
 		
       <plugin>
 	      <artifactId>maven-compiler-plugin</artifactId>
-	      <configuration>
-	        <source>11</source>
-	        <target>11</target>
-	        <encoding>UTF-8</encoding>
-	      </configuration>
 	    </plugin>
 	
 	    <plugin>
 		    <artifactId>maven-source-plugin</artifactId>
-		    <executions>
-		      <execution>
-		        <id>attach-source</id>
-		        <goals>
-		          <goal>jar</goal>
-		        </goals>
-		      </execution>
-		    </executions>
 	    </plugin>
 		
 		  <plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-surefire-plugin</artifactId>
-		    <configuration>
-		      <properties>
-		        <property>
-		        	<!-- Prints out spaces and test name before/after every test method and automatically -->
-		          <name>listener</name>
-		          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
-		        </property>
-		       </properties>
-		    </configuration>
 		  </plugin>
-		  
-			<plugin>
-	      <groupId>com.github.github</groupId>
-	      <artifactId>site-maven-plugin</artifactId>
-	      <version>0.12</version>
-	      <executions>
-	        <execution>
-	          <phase/>
-	        </execution>
-	      </executions>
-      </plugin>    	    
-		
+		  		
 		</plugins>
 	
     <testResources>
@@ -199,15 +106,4 @@
 		  				  	
   </repositories>
 
-	<distributionManagement>
-    <snapshotRepository>
-    	<id>mbrandizi.jfrog.io</id>
-			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
-    </snapshotRepository>
-
-    <repository>
-    	<id>mbrandizi.jfrog.io</id>
-			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
-    </repository>	
-	</distributionManagement>
 </project>

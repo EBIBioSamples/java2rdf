@@ -1,13 +1,13 @@
 package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
-import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
+import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.RDF_GRAPH_UTILS;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.rdf.api.Literal;
+import org.apache.jena.rdf.model.Literal;
 
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
@@ -69,7 +69,7 @@ public class LiteralPropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T,
 			Literal targetRdfVal = targetValGen.getValue ( propValue, params );
 			if ( targetRdfVal == null ) return false;
 			
-			COMMUTILS.assertLiteral ( 
+			RDF_GRAPH_UTILS.assertLiteral ( 
 				this.getMapperFactory ().getGraphModel (), 
 				subjUri, 
 				this.getTargetPropertyUri (),

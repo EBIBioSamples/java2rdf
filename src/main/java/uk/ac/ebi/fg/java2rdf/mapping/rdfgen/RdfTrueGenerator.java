@@ -2,7 +2,7 @@ package uk.ac.ebi.fg.java2rdf.mapping.rdfgen;
 
 import java.util.Map;
 
-import org.apache.commons.rdf.api.Literal;
+import org.apache.jena.rdf.model.Literal;
 
 /**
  * A {@link RdfLiteralGenerator literal generator} for booleans that returns null for the false value.

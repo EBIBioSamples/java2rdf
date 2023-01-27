@@ -1,6 +1,6 @@
 package uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping;
 
-import org.apache.commons.rdf.api.Graph;
+import org.apache.jena.rdf.model.Model;
 
 import info.marcobrandizi.rdfutils.namespaces.NamespaceUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
@@ -27,9 +27,9 @@ public class FoafMapperFactory extends RdfMapperFactory
 		NamespaceUtils.registerNs ( "foaf",		"http://xmlns.com/foaf/0.1/" );
 	}
 	
-	public FoafMapperFactory ( Graph graph )
+	public FoafMapperFactory ( Model graphModel )
 	{
-		super ( graph );
+		super ( graphModel );
 		this.setMapper ( Article.class, new ArticleMapper () );
 		this.setMapper ( Person.class, new PersonMapper () );
 	}

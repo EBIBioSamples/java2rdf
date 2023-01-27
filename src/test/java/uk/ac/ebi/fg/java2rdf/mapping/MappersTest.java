@@ -1,29 +1,25 @@
 package uk.ac.ebi.fg.java2rdf.mapping;
 
-import static info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils.COMMUTILS;
 import static info.marcobrandizi.rdfutils.namespaces.NamespaceUtils.iri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.RDF_GRAPH_UTILS;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
-import org.apache.commons.rdf.api.Literal;
-import org.apache.commons.rdf.api.RDFTerm;
-import org.apache.commons.rdf.api.Triple;
-import org.apache.commons.rdf.jena.JenaGraph;
-import org.apache.commons.rdf.jena.JenaRDF;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.junit.Before;
 import org.junit.Test;
 
-import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import info.marcobrandizi.rdfutils.jena.SparqlBasedTester;
 import info.marcobrandizi.rdfutils.namespaces.NamespaceUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.properties.CollectionPropRdfMapper;
@@ -107,6 +103,7 @@ public class MappersTest
 		}
 	}
 	
+	
 	/** 
 	 * One way to define an RDF mapper is to extend the basic mapper, this will be more common in real situations. 
 	 * You typically will want to prepare it all in the class initialiser or a constructor. 
@@ -139,7 +136,7 @@ public class MappersTest
 
 	public static final String FOONS = "http://www.example.com/foo#";
 	
-	private Graph graph;
+	private Model graphModel;
 	
 	private Foo foo;
 	
@@ -149,14 +146,8 @@ public class MappersTest
 		foo = new Foo ();
 		foo.setName ( "A Test Object" );
 		foo.setDescription ( "A test description" );
-		
-		// We're sure it will be the Jena flavour, because we're using this dependency here.
-		JenaRDF rdf = (JenaRDF) CommonsRDFUtils.COMMUTILS.getRDF ();
-		
-		// JenaRDF can generate a graph wrapping a new model via createGraph(). This other approach allows for 
-		// better control on the way the model is created and set up (at the expense of framework independence,
-		// we're doing this in tests and nowhere else in java2rdf).
-		graph = rdf.asGraph ( ModelFactory.createDefaultModel () );
+				
+		graphModel = ModelFactory.createDefaultModel ();
 		
 		NamespaceUtils.registerNs ( "foo", FOONS );
 	}
@@ -169,7 +160,7 @@ public class MappersTest
 		 * Anonymous classses is another, less common approach to define the mapping between beans and RDF/OWL. Compare this
 		 * to the FooMapper approach above. Of course you can combine the two. 
 		 */
-		RdfMapperFactory mapFactory = new RdfMapperFactory ( graph ) {{
+		RdfMapperFactory mapFactory = new RdfMapperFactory ( graphModel ) {{
 			this.setMapper ( Foo.class, new BeanRdfMapper<Foo> ( FOONS + "FooChild" ) {{
 				this.setRdfUriGenerator ( new RdfUriGenerator<Foo>() {
 					@Override
@@ -200,43 +191,43 @@ public class MappersTest
 		assertEquals ( 
 			"Wrong name mapping!", 
 			foo.getName (),
-			COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:name" ) )
-			.flatMap ( COMMUTILS::literal2Value )
+			RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( foo ), iri ( "foo:name" ) )
+			.flatMap ( RDF_GRAPH_UTILS::literal2Value )
 			.orElse ( null )
 	  );
 		
 		assertEquals ( 
 			"Wrong description mapping!", 
 			foo.getDescription (),
-			COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "rdfs:comment" ), true )
-			.flatMap ( COMMUTILS::literal2Value )
+			RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( foo ), iri ( "rdfs:comment" ), true )
+			.flatMap ( RDF_GRAPH_UTILS::literal2Value )
 			.orElse ( null )
 	  );	
 		
 		assertEquals ( 
 			"Wrong description mapping!", 
 			foo.getDescription (),
-			COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:description" ), true )
-			.flatMap ( COMMUTILS::literal2Value )
+			RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( foo ), iri ( "foo:description" ), true )
+			.flatMap ( RDF_GRAPH_UTILS::literal2Value )
 			.orElse ( null )
 	  );		
 		
 
-		RDFTerm pricen = COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:hasPrice" ), true ).orElse ( null );
+		RDFNode pricen = RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( foo ), iri ( "foo:hasPrice" ), true ).orElse ( null );
 		assertNotNull ( "Price not found!", pricen );
 		assertTrue ( "hasPrice node not literal!", pricen instanceof Literal );
 		
 		Literal pricel = (Literal) pricen;
 		assertEquals ( "Price wrong!", String.valueOf ( foo.getPrice () ), pricel.getLexicalForm () );
-		assertEquals ( "Price XSD type wrong!", iri ( "xsd:double" ), pricel.getDatatype ().getIRIString () );
+		assertEquals ( "Price XSD type wrong!", iri ( "xsd:double" ), pricel.getDatatype ().getURI () );
 
-		RDFTerm expiredn = COMMUTILS.getObject ( graph, mapFactory.getUri ( foo ), iri ( "foo:isExpired" ), true ).orElse ( null );
+		RDFNode expiredn = RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( foo ), iri ( "foo:isExpired" ), true ).orElse ( null );
 		assertNotNull ( "expired flag not found!", expiredn );
 		assertTrue ( "isExpired node not literal!", expiredn instanceof Literal );
 		
 		Literal expiredl = (Literal) expiredn;
 		assertEquals ( "expired flag wrong!", String.valueOf ( foo.isExpired () ), expiredl.getLexicalForm () );
-		assertEquals ( "expired flag XSD type wrong!", iri ( "xsd:boolean" ), expiredl.getDatatype ().getIRIString () );
+		assertEquals ( "expired flag XSD type wrong!", iri ( "xsd:boolean" ), expiredl.getDatatype ().getURI () );
 	
 	}
 	
@@ -244,8 +235,8 @@ public class MappersTest
 	@Test
 	public void testOneOneRelation ()
 	{
-		RdfMapperFactory mapFactory = new RdfMapperFactory ( graph ) {{
-			this.setGraphModel ( graph );
+		RdfMapperFactory mapFactory = new RdfMapperFactory ( graphModel ) {{
+			this.setGraphModel ( graphModel );
 			this.setMapper ( Foo.class, new FooMapper<Foo> () );
 			this.setMapper ( FooChild.class, new FooMapper<FooChild> () {{
 				this.setRdfClassUri ( FOONS + "FooChild" );
@@ -261,10 +252,10 @@ public class MappersTest
 		mapFactory.map ( child );
 		outputRdf ();
 
-		RDFTerm obj = COMMUTILS.getObject ( graph, mapFactory.getUri ( child ), iri ( "foo:has-parent" ), true ).orElse ( null );
+		RDFNode obj = RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( child ), iri ( "foo:has-parent" ), true ).orElse ( null );
 		assertNotNull ( "no has-parent returned!", obj );
-		assertTrue ( "Wrong node type returned!", obj instanceof IRI );
-		assertEquals ( "Wrong uri returned for has-parent!", mapFactory.getUri ( foo ), ( (IRI) obj ).getIRIString () );
+		assertTrue ( "Wrong node type returned!", obj instanceof Resource );
+		assertEquals ( "Wrong uri returned for has-parent!", mapFactory.getUri ( foo ), ((Resource) obj).getURI () );
 	}
 	
 	/** 
@@ -276,8 +267,8 @@ public class MappersTest
 	@Test
 	public void testOneToManyRelation () 
 	{
-		RdfMapperFactory mapFactory = new RdfMapperFactory ( graph ) {{
-			this.setGraphModel ( graph );
+		RdfMapperFactory mapFactory = new RdfMapperFactory ( graphModel ) {{
+			this.setGraphModel ( graphModel );
 			this.setMapper ( Foo.class, new FooMapper<Foo> () {{
 				this.addPropertyMapper ( "children",
 					new CollectionPropRdfMapper<Foo, FooChild, String> ( new ResourcePropRdfMapper<Foo, FooChild> ( FOONS + "has-child") )); 
@@ -311,23 +302,21 @@ public class MappersTest
 		{
 			// Verify has-parent
 			{
-				RDFTerm obj = COMMUTILS.getObject ( graph, mapFactory.getUri ( child ), iri ( "foo:has-parent" ), true ).orElse ( null );
+				RDFNode obj = RDF_GRAPH_UTILS.getObject ( graphModel, mapFactory.getUri ( child ), iri ( "foo:has-parent" ), true ).orElse ( null );
 				assertNotNull ( "no has-parent returned for " + child.getName () + "!", obj );
-				assertTrue ( "Wrong node type returned!", obj instanceof IRI );
-				assertEquals ( "Wrong uri returned for has-parent!", mapFactory.getUri ( foo ), ( (IRI) obj ).getIRIString () );
+				assertTrue ( "Wrong node type returned!", obj instanceof Resource );
+				assertEquals ( "Wrong uri returned for has-parent!", mapFactory.getUri ( foo ), ( (Resource) obj ).getURI () );
 			}
 			
 			// Verify has-child
 			{
-				Triple checkTriple = graph.stream ( 
-					COMMUTILS.uri2Resource ( graph, mapFactory.getUri ( foo ) ), 
-					COMMUTILS.uri2Property ( graph, iri ( "foo:has-child" ) ), 
-					COMMUTILS.uri2Resource ( graph, mapFactory.getUri ( child ) )
-				)
-				.findFirst ()
-				.orElse ( null );
+				StmtIterator triplesItr = graphModel.listStatements ( 
+					RDF_GRAPH_UTILS.uri2Resource ( graphModel, mapFactory.getUri ( foo ) ), 
+					RDF_GRAPH_UTILS.uri2Property ( graphModel, iri ( "foo:has-child" ) ), 
+					RDF_GRAPH_UTILS.uri2Resource ( graphModel, mapFactory.getUri ( child ) )
+				);
 				
-				assertNotNull ( "No has-child for " + child.getName () + "!", checkTriple );
+				assertTrue ( "No has-child for " + child.getName () + "!", triplesItr.hasNext () );
 			}
 		}
 
@@ -338,7 +327,7 @@ public class MappersTest
 	 * A complete mapping example, written to show main mapping declarations in one place.
 	 * 
 	 * The output from this example is like:
-	 * <pre>{@code
+	 * <pre>
 			@base          <http://www.example.com/foo#> .
 			@prefix owl:   <http://www.w3.org/2002/07/owl#> .
 			@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -369,13 +358,13 @@ public class MappersTest
 			        foo:is-parent-of  foo:a_test_object ;
 			        foo:name          "A test Child 2" .
         
-	 * }</pre>
+	 * </pre>
 	 */
 	@Test
 	public void testCompleteExample ()
 	{
-		RdfMapperFactory mapFactory = new RdfMapperFactory ( graph ) {{
-			this.setGraphModel ( graph );
+		RdfMapperFactory mapFactory = new RdfMapperFactory ( graphModel ) {{
+			this.setGraphModel ( graphModel );
 			this.setMapper ( Foo.class, new BeanRdfMapper<Foo> () {{
 				// How beans of Foo type generates URI identifiers
 				this.setRdfUriGenerator ( new RdfUriGenerator<Foo> () {
@@ -439,7 +428,7 @@ public class MappersTest
 		
 		// Again, this is Jena-specific, java2rdf doesn't depend on it except in tests.
 		SparqlBasedTester tester = new SparqlBasedTester ( 
-			( (JenaGraph) graph ).asJenaModel (), NamespaceUtils.asSPARQLProlog () 
+			graphModel, NamespaceUtils.asSPARQLProlog () 
 		);
 		
 		tester.ask ( "Noo child 1 instantiation!", "ASK { foo:a_test_child_1 rdf:type foo:FooChild }" );
@@ -459,12 +448,7 @@ public class MappersTest
 	
 	private void outputRdf ()
 	{
-		// This brings us from the generic commons API back to the specific framework. We use Jena here in tests
-		// and nowhere else. Your application will likely be more framework-specific. 
-		// Note that Commons-RDF doesn't abstract features like RDF serialisation. 
-		//
-		Model m = ( (JenaGraph) graph ).asJenaModel ();
-		m.setNsPrefixes ( NamespaceUtils.getNamespaces () );
-		m.write ( System.out, "TURTLE", FOONS );
+		graphModel.setNsPrefixes ( NamespaceUtils.getNamespaces () );
+		graphModel.write ( System.out, "TURTLE", FOONS );
 	}
 }

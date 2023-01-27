@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.rdf.api.Graph;
+import org.apache.jena.rdf.model.Model;
 
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 
@@ -32,14 +32,14 @@ import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 @SuppressWarnings ( { "rawtypes", "unchecked" } )
 public class RdfMapperFactory
 {
-	private Graph graphModel;
+	private Model graphModel;
 	private Map<Class, ObjRdfMapper> mappers;
 	private Set visitedObjects = Collections.synchronizedSet ( new HashSet<> () );
 	
 	public RdfMapperFactory () {
 	}
 	
-	public RdfMapperFactory ( Graph graphModel ) {
+	public RdfMapperFactory ( Model graphModel ) {
 		this.graphModel = graphModel;
 	}
 	
@@ -107,14 +107,14 @@ public class RdfMapperFactory
 	}
 	
 	/** This is where the mapping output goes */
-	public Graph getGraphModel () {
+	public Model getGraphModel () {
 		return graphModel;
 	}
 
 	/**
 	 * In case it is really new, {@link #reset()} is invoked. 
 	 */
-	public void setGraphModel ( Graph graphModel ) 
+	public void setGraphModel ( Model graphModel ) 
 	{
 		if ( this.graphModel == graphModel ) return;
 		this.graphModel = graphModel;

@@ -4,13 +4,10 @@ import java.io.FileWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.jena.JenaRDF;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.Test;
 
-import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import info.marcobrandizi.rdfutils.jena.SparqlBasedTester;
 import info.marcobrandizi.rdfutils.namespaces.NamespaceUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.foaf_example.mapping.FoafMapperFactory;
@@ -54,24 +51,11 @@ public class FoafMappingTest
 		article.setAuthors ( authors );
 		article.setEditor ( editor );
 		
-		// You must provide a graph to the mapper factory. Graph is a wrapper from the Apache commons-rdf
-		// API, which is then implemented with a specific RDF framework. Here Jena is used for the latter, but
-		// only for the tests, javq2rdf is pure commons-rdf and doesn't depend on a specific framework.
-		// You'll java2rdf client will likely be, in the way shown here.
-		
-		// We're sure it will be the Jena flavour, because we're using this dependency here.
-		JenaRDF rdf = (JenaRDF) CommonsRDFUtils.COMMUTILS.getRDF ();
-		
-		// JenaRDF can generate a graph wrapping a new model via createGraph(). This other approach allows for 
-		// better control on the way the model is created and set up (at the expense of framework independence)
 		Model model = ModelFactory.createDefaultModel ();
 		model.setNsPrefixes ( NamespaceUtils.getNamespaces () );
 
-		Graph graph = rdf.asGraph ( model );
-		
-
 		// Our factory
-		FoafMapperFactory mf = new FoafMapperFactory ( graph );
+		FoafMapperFactory mf = new FoafMapperFactory ( model );
 		
 		// Here we go, starting from the top, a set of graph roots (or even all objects you have)
 		mf.map ( article );

@@ -1,15 +1,15 @@
 package uk.ac.ebi.fg.java2rdf.mapping.properties;
 
+import static uk.ac.ebi.fg.java2rdf.utils.Java2RdfUtils.RDF_GRAPH_UTILS;
+
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-import info.marcobrandizi.rdfutils.commonsrdf.CommonsRDFUtils;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMapperFactory;
 import uk.ac.ebi.fg.java2rdf.mapping.RdfMappingException;
-import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfLiteralGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfUriGenerator;
 import uk.ac.ebi.fg.java2rdf.mapping.rdfgen.RdfValueGenerator;
 
@@ -67,7 +67,7 @@ public class ResourcePropRdfMapper<T, PT> extends UriProvidedPropertyRdfMapper<T
 			
 			if ( objUri == null ) return false;
 			
-			CommonsRDFUtils.COMMUTILS.assertResource ( 
+			RDF_GRAPH_UTILS.assertResource ( 
 				mapFactory.getGraphModel (), 
 				subjUri,
 				this.getTargetPropertyUri (), 
