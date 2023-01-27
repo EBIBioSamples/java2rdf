@@ -2,7 +2,10 @@
 
 *This file was last reviewed on 2023-01-27*
 
-## 4.0-SNAPSHOT
+## 4.0.1-SNAPSHOT
+* Just started
+
+## 4.0
 * Apache commons RDF removed. **Now jena2rdf depends on Jena again**, sorry, commons RDF seems dead and I 
   don't have time anymore to maintain my own patches, which are never merged into the main codebase.
 
