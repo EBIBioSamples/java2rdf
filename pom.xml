@@ -5,7 +5,7 @@
 	<parent>
 	  <groupId>info.marcobrandizi</groupId>
 	  <artifactId>rdfutils</artifactId>
-	  <version>4.0.1</version>
+	  <version>4.0.3</version>
 	</parent>
 
   <groupId>uk.ac.ebi.fg</groupId>
@@ -53,6 +53,7 @@
 		<dependency>
 			<groupId>info.marcobrandizi</groupId>
 			<artifactId>rdfutils-jena</artifactId>
+			<version>${project.parent.version}</version>			
 		</dependency>
 
   </dependencies>
