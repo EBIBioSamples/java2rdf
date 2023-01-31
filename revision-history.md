@@ -2,8 +2,11 @@
 
 *This file was last reviewed on 2023-01-27*
 
-## 4.0.1-SNAPSHOT
-* Just started
+## 4.0.2-SNAPSHOT
+* Current snapshot.
+
+## 4.0.1
+* Updating rdfutils dependency.
 
 ## 4.0
 * Apache commons RDF removed. **Now jena2rdf depends on Jena again**, sorry, commons RDF seems dead and I 
