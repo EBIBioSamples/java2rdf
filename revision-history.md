@@ -1,9 +1,12 @@
 # Revision History
 
-*This file was last reviewed on 2023-01-41*
+*This file was last reviewed on 2023-03-08*. **Please, keep this note updated**.
 
 ## 4.0.2-SNAPSHOT
 * Current snapshot.
+
+## 4.1
+* Another rdfutils dependency update.
 
 ## 4.0.1
 * Updating rdfutils dependency.
