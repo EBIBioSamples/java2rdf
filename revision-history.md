@@ -1,9 +1,9 @@
 # Revision History
 
-*This file was last reviewed on 2023-03-08*. **Please, keep this note updated**.
+*This file was last reviewed on 2023-06-12*. **Please, keep this note updated**.
 
 ## 4.1.1-SNAPSHOT
-* Current snapshot.
+* **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public).
 
 ## 4.1
 * Another rdfutils dependency update.

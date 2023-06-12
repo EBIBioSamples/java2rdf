@@ -5,7 +5,7 @@
 	<parent>
 	  <groupId>info.marcobrandizi</groupId>
 	  <artifactId>rdfutils</artifactId>
-	  <version>4.1</version>
+  	<version>4.1.1-SNAPSHOT</version>
 	</parent>
 
   <groupId>uk.ac.ebi.fg</groupId>
@@ -92,8 +92,8 @@
 
 		<!-- rdfutils -->
     <repository>
-    	<id>mbrandizi.jfrog.io</id>
-			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
+    	<id>marcobrandizi.info</id>
+			<url>https://artifactory.marcobrandizi.info/public</url>
 	    <snapshots><enabled>true</enabled></snapshots>
 	    <releases><enabled>true</enabled></releases>
     </repository>
