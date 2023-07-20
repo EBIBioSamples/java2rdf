@@ -1,9 +1,11 @@
 # Revision History
 
-*This file was last reviewed on 2023-06-12*. **Please, keep this note updated**.
+*This file was last reviewed on 2023-07-20*. **Please, keep this note updated**.
 
-## 4.1.1-SNAPSHOT
+## 5.0-SNAPSHOT
 * **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public).
+* Migrated to Java 17. **WARNING: no backward compatibility guaranteed**.
+
 
 ## 4.1
 * Another rdfutils dependency update.
