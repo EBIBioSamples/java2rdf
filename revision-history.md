@@ -5,7 +5,7 @@
 ## 5.0.1-SNAPSHOT
 * Current snapshot
 
-## 5.0-SNAPSHOT
+## 5.0
 * **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public).
 * Migrated to Java 17. **WARNING: no backward compatibility guaranteed**.
 
