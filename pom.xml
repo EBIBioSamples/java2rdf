@@ -10,7 +10,7 @@
 
   <groupId>uk.ac.ebi.fg</groupId>
   <artifactId>java2rdf</artifactId>
-  <version>5.0-SNAPSHOT</version>
+  <version>5.0</version>
   <packaging>jar</packaging>
 
   <name>java2rdf library</name>
