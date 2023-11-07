@@ -5,7 +5,7 @@
 	<parent>
 	  <groupId>info.marcobrandizi</groupId>
 	  <artifactId>rdfutils</artifactId>
-  	<version>5.0</version>
+  	<version>5.0.1</version>
 	</parent>
 
   <groupId>uk.ac.ebi.fg</groupId>
@@ -59,9 +59,7 @@
   </dependencies>
 
 	<build>
-	
-		<finalName>${project.artifactId}_cmdline_${project.version}</finalName>
-	
+		
 		<plugins>
 		
       <plugin>
@@ -97,14 +95,7 @@
 	    <snapshots><enabled>true</enabled></snapshots>
 	    <releases><enabled>true</enabled></releases>
     </repository>
-    
-    <repository>
-    	<id>jena-snapshots</id>
-			<url>https://repository.apache.org/content/groups/snapshots</url>
-	    <snapshots><enabled>true</enabled></snapshots>
-	    <releases><enabled>false</enabled></releases>
-    </repository>
-		  				  	
+    		  				  	
   </repositories>
 
 </project>
