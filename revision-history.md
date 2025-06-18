@@ -1,9 +1,9 @@
 # Revision History
 
-*This file was last reviewed on 2025-06-18*. **Please, keep this note updated**.
+*This file was last reviewed on 2025-06-19*. **Please, keep this note updated**.
 
 
-## 5.0.2-SNAPSHOT
+## 6.0-SNAPSHOT
 * rdfutils and Jena dependencies upgraded.
 
 
