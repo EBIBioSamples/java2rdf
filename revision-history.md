@@ -1,10 +1,10 @@
 # Revision History
 
-*This file was last reviewed on 2023-11-07*. **Please, keep this note updated**.
+*This file was last reviewed on 2025-06-18*. **Please, keep this note updated**.
 
 
 ## 5.0.2-SNAPSHOT
-* Current snapshot
+* rdfutils and Jena dependencies upgraded.
 
 
 ## 5.0.1
